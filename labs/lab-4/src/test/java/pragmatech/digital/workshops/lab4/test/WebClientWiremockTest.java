@@ -1,13 +1,13 @@
 package pragmatech.digital.workshops.lab4.test;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import pragmatech.digital.workshops.lab4.entity.Book;
 import pragmatech.digital.workshops.lab4.service.BookInfoService;
@@ -17,7 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@AutoConfigureWireMock(port = 0)
+@WireMockTest(httpPort = 8080)
+@TestPropertySource(properties = "book.info.service.url=http://localhost:8080")
 @ActiveProfiles("test")
 public class WebClientWiremockTest {
 

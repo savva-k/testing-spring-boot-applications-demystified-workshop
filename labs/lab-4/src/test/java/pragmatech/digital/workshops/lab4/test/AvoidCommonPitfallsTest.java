@@ -97,7 +97,7 @@ public class AvoidCommonPitfallsTest {
         @Test
         void createBook_returnsCreatedBook_whenSuccessful() throws Exception {
             // Given
-            when(bookService.createBook(any(Book.class))).thenReturn(testBook);
+            when(bookService.createBook(org.mockito.ArgumentMatchers.any(Book.class))).thenReturn(testBook);
 
             // When & Then
             mockMvc.perform(post("/api/books")
@@ -110,7 +110,7 @@ public class AvoidCommonPitfallsTest {
         @Test
         void createBook_returnsBadRequest_whenDuplicate() throws Exception {
             // Given
-            when(bookService.createBook(any(Book.class))).thenThrow(new IllegalStateException("Duplicate book"));
+            when(bookService.createBook(org.mockito.ArgumentMatchers.any(Book.class))).thenThrow(new IllegalStateException("Duplicate book"));
 
             // When & Then
             mockMvc.perform(post("/api/books")
