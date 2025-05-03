@@ -1,0 +1,49 @@
+{
+    "name": "Spring Boot Testing Workshop",
+    "image": "mcr.microsoft.com/devcontainers/java:21",
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "none",
+            "installMaven": true,
+            "mavenVersion": "3.9.6"
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers-contrib/features/plantuml:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vscjava.vscode-spring-boot-dashboard",
+                "vmware.vscode-spring-boot",
+                "vscjava.vscode-spring-initializr",
+                "pivotal.vscode-boot-dev-pack",
+                "redhat.java",
+                "redhat.vscode-xml",
+                "jebbs.plantuml",
+                "gabrielbb.vscode-lombok",
+                "ms-azuretools.vscode-docker"
+            ],
+            "settings": {
+                "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+                "java.format.settings.profile": "GoogleStyle",
+                "editor.formatOnSave": true,
+                "java.completion.importOrder": [
+                    "java",
+                    "javax",
+                    "org",
+                    "com",
+                    "pragmatech"
+                ],
+                "java.configuration.updateBuildConfiguration": "automatic",
+                "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
+                "java.test.config": {
+                    "vmArgs": ["-Djava.security.properties=${workspaceFolder}/.devcontainer/java-security.properties"]
+                }
+            }
+        }
+    },
+    "forwardPorts": [8080],
+    "postCreateCommand": "bash .devcontainer/setup.sh",
+    "remoteUser": "vscode"
+}

@@ -1,0 +1,91 @@
+@startuml Spring Boot Test Slices
+
+' Color definition
+!define FULL_APP_BG_COLOR #FFCDD2
+!define WEB_SLICE_BG_COLOR #DCEDC8
+!define DATA_SLICE_BG_COLOR #BBDEFB
+!define BORDER_COLOR #455A64
+!define TEXT_COLOR #000000
+
+' Define custom styles
+skinparam rectangle {
+    BackgroundColor FULL_APP_BG_COLOR
+    BorderColor BORDER_COLOR
+    FontColor TEXT_COLOR
+}
+
+skinparam component {
+    BackgroundColor FULL_APP_BG_COLOR
+    BorderColor BORDER_COLOR
+    FontColor TEXT_COLOR
+}
+
+' Define rectangles for different context types
+rectangle "@SpringBootTest" as FullApp {
+    [Controllers]
+    [Services]
+    [Repositories]
+    [Security Filters]
+    [MessageConverters]
+    [Other Components]
+    
+    [Controllers] --> [Services]
+    [Services] --> [Repositories]
+}
+
+rectangle "@WebMvcTest" as WebSlice #WEB_SLICE_BG_COLOR {
+    [Web Layer Only]
+    [MockMvc]
+    [Controller Under Test]
+    [Security Filters]
+    [MessageConverters]
+    [Mock Services] #LightGray
+    
+    [Web Layer Only] .> [Controller Under Test]
+    [Web Layer Only] .> [Security Filters]
+    [Web Layer Only] .> [MessageConverters]
+    [Controller Under Test] ..> [Mock Services]
+}
+
+rectangle "@DataJpaTest" as DataSlice #DATA_SLICE_BG_COLOR {
+    [Data Layer Only]
+    [Repository Under Test]
+    [EntityManager]
+    [DataSource]
+    [TestEntityManager]
+    
+    [Data Layer Only] .> [Repository Under Test]
+    [Repository Under Test] ..> [EntityManager]
+    [TestEntityManager] ..> [EntityManager]
+    [EntityManager] ..> [DataSource]
+}
+
+' Add notes explaining the testing slices
+note bottom of FullApp
+  @SpringBootTest loads the entire application context.
+  Good for integration tests, but slower and more resource-intensive.
+end note
+
+note bottom of WebSlice
+  @WebMvcTest loads only the web layer components.
+  Faster than @SpringBootTest.
+  Services are mocked.
+end note
+
+note bottom of DataSlice
+  @DataJpaTest loads only the data layer components.
+  Uses an in-memory database by default.
+  Transactions are rolled back after each test.
+end note
+
+' Add a legend showing other Spring Boot test slices
+rectangle "Other Test Slices" as OtherSlices {
+    [[@JsonTest - JSON serialization/deserialization]]
+    [[@RestClientTest - REST clients]]
+    [[@WebFluxTest - WebFlux controllers]]
+    [[@JdbcTest - JDBC data access]]
+    [[@DataMongoTest - MongoDB repositories]]
+    [[@DataRedisTest - Redis repositories]]
+}
+
+@enduml

@@ -1,0 +1,83 @@
+@startuml Library Domain Model
+
+' Entity styling
+!define ENTITY_BG_COLOR #E3F2FD
+!define ENTITY_BORDER_COLOR #2196F3
+!define ENTITY_TEXT_COLOR #000000
+!define ENUM_BG_COLOR #F3E5F5
+!define ENUM_BORDER_COLOR #9C27B0
+
+skinparam class {
+    BackgroundColor ENTITY_BG_COLOR
+    BorderColor ENTITY_BORDER_COLOR
+    ArrowColor ENTITY_BORDER_COLOR
+    FontColor ENTITY_TEXT_COLOR
+}
+
+skinparam enum {
+    BackgroundColor ENUM_BG_COLOR
+    BorderColor ENUM_BORDER_COLOR
+}
+
+' Define entities
+class Book {
+    +isbn: String
+    +title: String
+    +author: String
+    +publishedDate: LocalDate
+    +status: BookStatus
+}
+
+class LibraryUser {
+    +id: Long
+    +name: String
+    +email: String
+    +membershipNumber: String
+    +memberSince: LocalDate
+}
+
+class BookLoan {
+    +id: Long
+    +loanDate: LocalDate
+    +dueDate: LocalDate
+    +returnDate: LocalDate
+}
+
+class BookReview {
+    +id: Long
+    +reviewerName: String
+    +rating: Integer
+    +comment: String
+    +reviewDate: LocalDateTime
+}
+
+enum BookStatus {
+    AVAILABLE
+    BORROWED
+    RESERVED
+    LOST
+    UNDER_REPAIR
+}
+
+' Define relationships
+Book "1" *-- "0..*" BookReview : < has
+Book "1" -- "0..*" BookLoan : < is loaned through
+LibraryUser "1" -- "0..*" BookLoan : < borrows
+Book -- BookStatus : has >
+
+' Add notes
+note bottom of Book
+  ISBN is the primary key
+  Status changes based on loans
+end note
+
+note bottom of BookLoan
+  When returnDate is null,
+  the book is still on loan
+end note
+
+note bottom of BookReview
+  Rating is from 1 to 5 stars
+end note
+
+@enduml

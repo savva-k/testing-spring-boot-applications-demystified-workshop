@@ -13,6 +13,24 @@ This workshop is designed to demystify testing in Spring Boot applications throu
 - Hands-on exercises with provided solutions
 - Building on a consistent domain model (a library management system)
 
+## GitHub Codespaces
+
+This repository is configured for use with GitHub Codespaces, which provides a complete, ready-to-use development environment in the cloud. To use GitHub Codespaces:
+
+1. Click on the "Code" button on the GitHub repository
+2. Select the "Codespaces" tab
+3. Click "Create codespace on main"
+4. Wait for the codespace to start and setup to complete
+
+The codespace includes:
+- Java 21
+- Maven
+- Docker (for TestContainers)
+- VS Code with Spring Boot extensions
+- All diagrams rendered as images
+
+For more information, see the [Codespaces documentation](.devcontainer/README.md).
+
 ## Workshop Slots
 
 ### Slot 1 (105 Minutes): Spring Boot Testing Fundamentals
@@ -54,6 +72,12 @@ This workshop is designed to demystify testing in Spring Boot applications throu
 - Testing asynchronous operations
 - Using AI to help with testing
 - Final thoughts and references
+
+## Domain Model
+
+The workshop uses a library management system as the sample domain. The domain model consists of books, library users, loans, and reviews.
+
+![Entity Relationship Diagram](diagrams/generated/entity_relationship_diagram.png)
 
 ## Lab Structure
 
@@ -103,6 +127,8 @@ Key files:
 
 In this lab, you'll learn how to use Spring Boot's test slices:
 
+![Spring Boot Test Slices](diagrams/generated/spring_boot_test_slices.png)
+
 - Test Spring MVC controllers with @WebMvcTest
 - Test security configurations
 - Test repository classes with @DataJpaTest
@@ -117,6 +143,12 @@ Key files:
 
 In this lab, you'll learn how to use Testcontainers for integration testing:
 
+![TestContainers Integration Testing](diagrams/generated/testcontainers_integration_testing.png)
+
+You'll also learn about Spring test context caching:
+
+![Spring Test Context Caching](diagrams/generated/spring_test_context_caching.png)
+
 - Set up full application tests with @SpringBootTest
 - Configure and use Testcontainers for PostgreSQL
 - Understand Spring test context caching and performance
@@ -130,6 +162,8 @@ Key files:
 ## Lab 4: Advanced Testing Techniques and Best Practices
 
 In this lab, you'll learn advanced testing techniques and best practices:
+
+![WebClient and WireMock Testing](diagrams/generated/webclient_wiremock_testing.png)
 
 - Test reactive applications with WebTestClient
 - Mock external services with WireMock

@@ -1,0 +1,86 @@
+@startuml TestContainers Integration Testing
+
+!define TESTCLASS_COLOR #BBDEFB
+!define CONTAINER_COLOR #FFECB3
+!define APP_COLOR #C8E6C9
+!define DATABASE_COLOR #F8BBD0
+!define DOCKER_COLOR #B3E5FC
+
+skinparam rectangle {
+    BackgroundColor white
+    BorderColor #455A64
+    FontColor #000000
+}
+
+skinparam component {
+    BackgroundColor white
+    BorderColor #455A64
+    FontColor #000000
+}
+
+rectangle "Host Machine" {
+    rectangle "JUnit Test Process" as JUnit #TESTCLASS_COLOR {
+        component "@SpringBootTest\nwith @Testcontainers" as TestClass #TESTCLASS_COLOR
+        component "@Container\npostgresContainer" as ContainerRef #TESTCLASS_COLOR
+        
+        note right of ContainerRef
+          Container lifecycle is managed 
+          by the test class
+        end note
+    }
+    
+    rectangle "Docker Engine" as Docker #DOCKER_COLOR {
+        component "PostgreSQL Container" as PostgresContainer #CONTAINER_COLOR {
+            database "postgres:14-alpine" as Postgres #DATABASE_COLOR
+        }
+        
+        note bottom of PostgresContainer
+          - Random mapped port
+          - Clean isolated instance
+          - Follows container lifecycle
+        end note
+    }
+    
+    rectangle "Spring Boot Application under Test" as SpringBootApp #APP_COLOR {
+        component "Spring Context" as SpringContext
+        component "Database Connection Pool" as ConnectionPool
+        
+        SpringContext -> ConnectionPool
+    }
+    
+    ' Connections
+    TestClass -> ContainerRef
+    ContainerRef --> PostgresContainer: creates & configures
+    ConnectionPool --> Postgres: connects to
+    
+    note bottom of ConnectionPool
+      Dynamic properties injected from
+      container configuration:
+      - spring.datasource.url
+      - spring.datasource.username
+      - spring.datasource.password
+    end note
+}
+
+note bottom of JUnit
+  Benefits of TestContainers:
+  - Real database for testing
+  - Isolated environment
+  - No external dependencies to set up
+  - Clean state for each test run
+  - Works with any database (PostgreSQL, MySQL, etc.)
+  - Can test database migrations
+end note
+
+note bottom of Docker
+  TestContainers supports:
+  - Databases
+  - Message Brokers
+  - Web Servers
+  - Custom containers
+  - Container networks
+  - Volume mounts
+  - Environment variables
+end note
+
+@enduml
