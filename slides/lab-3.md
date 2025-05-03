@@ -1,12 +1,20 @@
 ---
 marp: true
-theme: default
+theme: workshop-theme
 paginate: true
 ---
 
-# Testing Spring Boot Applications Demystified
+<!-- _class: title -->
 
+# Testing Spring Boot Applications
 ## Lab 3: Integration Testing
+
+---
+
+<!-- _class: section -->
+
+# SECTION 3
+# Integration Testing
 
 ---
 
@@ -18,6 +26,8 @@ paginate: true
 - Ensure end-to-end functionality
 
 ---
+
+<!-- _class: code -->
 
 # @SpringBootTest
 
@@ -85,6 +95,8 @@ Enter: **Testcontainers**
 - Wide range of supported systems
 
 ---
+
+<!-- _class: code -->
 
 # PostgreSQL with Testcontainers
 
@@ -281,7 +293,3 @@ Write a comprehensive test for the books API:
 - Managing test data effectively
 - Optimizing Spring Test Context caching
 - Testing HTTP APIs from the outside
-
----
-
-# Questions?

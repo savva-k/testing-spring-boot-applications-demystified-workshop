@@ -1,12 +1,20 @@
 ---
 marp: true
-theme: default
+theme: workshop-theme
 paginate: true
 ---
 
-# Testing Spring Boot Applications Demystified
+<!-- _class: title -->
 
+# Testing Spring Boot Applications
 ## Lab 2: Sliced Testing
+
+---
+
+<!-- _class: section -->
+
+# SECTION 2
+# Sliced Testing
 
 ---
 
@@ -41,6 +49,8 @@ paginate: true
 
 ---
 
+<!-- _class: code -->
+
 # @WebMvcTest
 
 ```java
@@ -60,6 +70,8 @@ class BookControllerTest {
 - No full application context
 
 ---
+
+<!-- _class: code -->
 
 # HTTP Semantics with MockMvc
 
@@ -141,6 +153,8 @@ void createBookWithoutAuthReturns401() throws Exception {
 3. Verify correct HTTP status codes for various security conditions
 
 ---
+
+<!-- _class: code -->
 
 # @DataJpaTest
 
@@ -227,6 +241,8 @@ How to test?
 
 ---
 
+<!-- _class: code -->
+
 # Lazy Loading
 
 ```java
@@ -279,7 +295,3 @@ void demonstrateLazyLoading() {
 - Test repository methods with proper transaction handling
 - Understand when SQL statements are executed
 - Verify proper HTTP semantics and JPA behavior
-
----
-
-# Questions?
