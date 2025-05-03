@@ -1,8 +1,14 @@
 package pragmatech.digital.workshops.lab2.exercises;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 import pragmatech.digital.workshops.lab2.config.RequestLoggingFilter;
 import pragmatech.digital.workshops.lab2.controller.BookController;
+import pragmatech.digital.workshops.lab2.repository.BookRepository;
 
 /**
  * Exercise 2: Testing Filters and Security
@@ -22,9 +28,19 @@ import pragmatech.digital.workshops.lab2.controller.BookController;
 @WebMvcTest({BookController.class, RequestLoggingFilter.class})
 public class Exercise2_FilterSecurityTest {
 
-    // TODO: Inject MockMvc and other required dependencies
+    @Autowired
+    private MockMvc mockMvc;
     
-    // TODO: Set up mocks for dependencies
+    @MockBean
+    private BookRepository bookRepository;
+    
+    // Example test to show how to structure your tests
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void exampleTest() {
+        // This test is intentionally empty but will pass
+        // It demonstrates how to use @WithMockUser annotation for authorization
+    }
     
     // TODO: Write test to verify RequestLoggingFilter logs request information
     

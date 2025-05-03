@@ -1,6 +1,11 @@
 package pragmatech.digital.workshops.lab3.exercises;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import pragmatech.digital.workshops.lab3.config.PostgresTestContainer;
 
 /**
@@ -22,11 +27,20 @@ import pragmatech.digital.workshops.lab3.config.PostgresTestContainer;
  * 6. Assert that the database is properly updated when making API calls.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class Exercise1_SpringBootTest extends PostgresTestContainer {
 
-    // TODO: Inject TestRestTemplate for making HTTP requests
+    @Autowired
+    private TestRestTemplate restTemplate;
     
-    // TODO: Inject JdbcTemplate for database assertions
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    // Example test that will pass
+    @Test
+    void contextLoads() {
+        // This test just verifies that the Spring context loads correctly
+    }
     
     // TODO: Set up test data and clean up after each test
     

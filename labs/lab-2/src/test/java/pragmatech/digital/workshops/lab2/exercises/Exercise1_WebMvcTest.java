@@ -1,7 +1,14 @@
 package pragmatech.digital.workshops.lab2.exercises;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 import pragmatech.digital.workshops.lab2.controller.BookController;
+import pragmatech.digital.workshops.lab2.repository.BookRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Exercise 1: Testing Web Controllers with @WebMvcTest
@@ -23,11 +30,19 @@ import pragmatech.digital.workshops.lab2.controller.BookController;
 @WebMvcTest(BookController.class)
 public class Exercise1_WebMvcTest {
 
-    // TODO: Inject MockMvc and other required dependencies
+    @Autowired
+    private MockMvc mockMvc;
     
-    // TODO: Mock the BookRepository
+    @MockBean
+    private BookRepository bookRepository;
     
-    // TODO: Set up security for testing
+    // Example test to show how to structure your tests
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void exampleTest() {
+        // This test is intentionally empty but will pass
+        // It demonstrates how to use @WithMockUser annotation for authorization
+    }
 
     // TODO: Write test for GET /api/books endpoint
     

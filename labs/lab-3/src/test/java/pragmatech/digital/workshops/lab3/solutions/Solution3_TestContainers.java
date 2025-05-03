@@ -88,7 +88,13 @@ public class Solution3_TestContainers {
     static class TestConfig {
         @Bean
         public JdbcTemplate jdbcTemplate() {
-            return new JdbcTemplate(postgresContainer.getDataSource());
+            // Create a DataSource from the container's connection info
+            org.springframework.jdbc.datasource.DriverManagerDataSource dataSource = 
+                new org.springframework.jdbc.datasource.DriverManagerDataSource();
+            dataSource.setUrl(postgresContainer.getJdbcUrl());
+            dataSource.setUsername(postgresContainer.getUsername());
+            dataSource.setPassword(postgresContainer.getPassword());
+            return new JdbcTemplate(dataSource);
         }
     }
     

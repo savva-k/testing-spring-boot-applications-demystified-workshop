@@ -29,10 +29,18 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .authorizeHttpRequests(auth -> auth
-                // Books endpoints
-                .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/books/**").hasRole("ADMIN")
+                // Books endpoints - public access for GET
+                .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books/{isbn}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books/available").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books/search").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books/recent").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books/top-rated").permitAll()
+                
+                // Admin-only endpoints
+                .requestMatchers(HttpMethod.POST, "/api/books").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/books/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/books/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN")
                 
                 // Users endpoints

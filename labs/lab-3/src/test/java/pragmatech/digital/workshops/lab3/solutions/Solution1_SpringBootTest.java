@@ -196,6 +196,10 @@ public class Solution1_SpringBootTest extends PostgresTestContainer {
         String isbn = "978-1-11111-111-1";
         Long userId = 1L;
         
+        // Clean up any existing user with this ID
+        jdbcTemplate.update("DELETE FROM book_loans WHERE user_id = ?", userId);
+        jdbcTemplate.update("DELETE FROM library_users WHERE id = ?", userId);
+        
         // Insert a user for the loan
         jdbcTemplate.update(
                 "INSERT INTO library_users (id, name, email, membership_number, member_since) VALUES (?, ?, ?, ?, ?)",

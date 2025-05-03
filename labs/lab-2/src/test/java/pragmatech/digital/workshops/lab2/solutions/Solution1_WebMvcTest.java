@@ -6,10 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import pragmatech.digital.workshops.lab2.config.SecurityConfig;
 import pragmatech.digital.workshops.lab2.controller.BookController;
 import pragmatech.digital.workshops.lab2.entity.Book;
 import pragmatech.digital.workshops.lab2.entity.BookStatus;
@@ -29,7 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Solution for Exercise 1: Testing Web Controllers with @WebMvcTest
  */
-@WebMvcTest(BookController.class)
+@WebMvcTest(controllers = BookController.class, 
+           includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, 
+                                                 classes = {SecurityConfig.class}))
 public class Solution1_WebMvcTest {
 
     @Autowired

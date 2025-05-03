@@ -54,12 +54,11 @@ public class BookController {
      * @return the created book
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Book createBook(@RequestBody Book book) {
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
         if (bookRepository.existsById(book.getIsbn())) {
-            throw new IllegalArgumentException("Book with ISBN " + book.getIsbn() + " already exists");
+            return ResponseEntity.badRequest().build();
         }
-        return bookRepository.save(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookRepository.save(book));
     }
     
     /**

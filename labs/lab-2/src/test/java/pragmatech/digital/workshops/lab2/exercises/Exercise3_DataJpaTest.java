@@ -1,6 +1,9 @@
 package pragmatech.digital.workshops.lab2.exercises;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import pragmatech.digital.workshops.lab2.repository.BookRepository;
 
 /**
@@ -28,7 +31,17 @@ import pragmatech.digital.workshops.lab2.repository.BookRepository;
 @DataJpaTest
 public class Exercise3_DataJpaTest {
 
-    // TODO: Inject TestEntityManager and BookRepository
+    @Autowired
+    private TestEntityManager entityManager;
+    
+    @Autowired
+    private BookRepository bookRepository;
+    
+    // Example test to show how tests pass with empty implementation
+    @Test
+    void exampleTest() {
+        // This test is intentionally empty but will pass
+    }
     
     // TODO: Set up test data in the database
     
