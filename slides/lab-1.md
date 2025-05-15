@@ -1,6 +1,6 @@
 ---
 marp: true
-theme: workshop-theme
+theme: pragmatech
 paginate: true
 ---
 
@@ -10,6 +10,18 @@ paginate: true
 ## Lab 1: Spring Boot Testing Basics
 
 ---
+<!--
+
+- Welcome, Introduction
+  - Who are u, what's your role, how is testing handled in your company? Any specific testing challenges? Any specific hopes for this wor
+- Overview of the workshop  
+- When to eat, toilet, WLAN
+- Code Spaces alternative
+- My intro to testing
+
+- 
+
+-->
 
 <!-- _class: section -->
 

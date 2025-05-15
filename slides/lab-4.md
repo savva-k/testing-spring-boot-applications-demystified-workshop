@@ -1,6 +1,6 @@
 ---
 marp: true
-theme: workshop-theme
+theme: pragmatech
 paginate: true
 ---
 
