@@ -1,4 +1,6 @@
-# Testing Spring Boot Applications Demystified
+# Testing Spring Boot Applications Demystified Workshop
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/PragmaTech-GmbH/testing-spring-boot-applications-demystified-workshop)
 
 A one-day workshop to help developers become more confident and productive when implementing automated tests for Spring Boot applications.
 
