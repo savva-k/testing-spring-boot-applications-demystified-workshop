@@ -44,16 +44,16 @@ rectangle "Test Environment" {
 }
 
 ' Connections in normal operation
-ExternalService -[#FFCDD2]-> SpringApp: Real requests (production)
+ExternalService --> SpringApp: "Real requests (production)"
 
 ' Connections in test
-TestClass -[#BBDEFB]-> SpringApp: Initiates test
-TestClass -[#BBDEFB]-> WireMock: Configures stubs
-WireMockExt -[#BBDEFB]-> WireMock: Controls
-Config -[#C8E6C9]-> WebClient: Configures URL
-WebClient -[#C8E6C9]-> WireMock: Mock HTTP requests
-WireMock -[#FFECB3]-> WebClient: Mock responses
-TestClass -[#BBDEFB]-> WireMock: Verifies requests
+TestClass --> SpringApp: "Initiates test"
+TestClass --> WireMock: "Configures stubs"
+WireMockExt --> WireMock: "Controls"
+Config --> WebClient: "Configures URL"
+WebClient --> WireMock: "Mock HTTP requests"
+WireMock --> WebClient: "Mock responses"
+TestClass --> WireMock: "Verifies requests"
 
 note bottom of WireMock
   WireMock capabilities:

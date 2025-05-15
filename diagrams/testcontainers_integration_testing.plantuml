@@ -50,8 +50,8 @@ rectangle "Host Machine" {
     
     ' Connections
     TestClass -> ContainerRef
-    ContainerRef --> PostgresContainer: creates & configures
-    ConnectionPool --> Postgres: connects to
+    ContainerRef --> PostgresContainer: "creates & configures"
+    ConnectionPool --> Postgres: "connects to"
     
     note bottom of ConnectionPool
       Dynamic properties injected from
