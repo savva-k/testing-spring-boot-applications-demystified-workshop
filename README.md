@@ -74,41 +74,71 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
 
 - Unit testing with Spring
   - External collaborators and dependency injection for testability
+  - Sample test to showcase
   - How to handle static? -> Date.now() example
 
 Exercises: 
 - JUnit: Creating custom JUnit 5 extensions, explore parameterized tests
-- Mockito: Stubbing, mocking, spying, verifying, argument captors
+- Mockito: Explore stubbing, see default mock behavior
 - AssertJ: Explore the fluent API, chaining assertions, expecting exceptions
 
 ### Slot 2 (115 Minutes): Testing Spring MVC and Data JPA with Test Slices
 
+- Discuss Exercise from Slot 1
+
 - Introduction to sliced testing
 - When unit testing is not sufficient
 - Using @WebMvcTest for controller testing
+- Comparing Sliced Testing to plain Unit Testing -> pros and cons
+
 - Testing filters and security configurations
 - Using @DataJpaTest for repository testing
+  - In-memory vs. real database
+  - How to prepare data
+  - Transaction management
 - Understanding JPA's transaction behavior and EntityManager
 - Testing custom database queries, including native SQL queries
 
-### Slot 3 (90 Minutes): Integration Testing with TestContainers
+Exercise:
+- @WebMvcTest: Testing a controller with MockMvc
+- @DataJpaTest: Testing a repository with a custom SQL query, verify the JPA entity can be stored, retrieved -> pitfall with flushing/commit persistence context
+- Explore sliced tests for your own tech-stack
+
+- Discuss Exercise solutions for Slot 2
+
+### Slot 3 (90 Minutes): Integration Testing with Testcontainers and WireMock
 
 - Full application testing with @SpringBootTest
+- Testing with WebClient and WebTestClient
+- Mocking external services with WireMock
 - Introduction to Testcontainers for external resources
 - Data cleanup strategies for integration tests
 - Understanding Spring test context caching
 - Performance optimization in test suites
 - Testing from outside with TestRestTemplate
 
+Exercise:
+- Seeing MockMvc vs. TestRestTemplate in action
+- Setup Testcontainers and WireMock as Docker containers
+- Improve test for context caching
+
 ### Slot 4 (70 Minutes): Advanced Testing Techniques and Best Practices
 
-- Testing with WebClient and WebTestClient
-- Mocking external services with WireMock
+- Discuss Exercise from Slot 3
 - Common Spring Boot testing pitfalls and how to avoid them
+  - 1. ABC
+  - 2. @SpringBootTest Obsession
+  - 3. JUnit 4 vs. 5 pitfall
 - Best practices for testing Spring Boot applications
-- Testing asynchronous operations
-- Using AI to help with testing
-- Final thoughts and references
+  - 1. Parallelizing tests
+  - 2. Get help from AI
+  - 3. Mutation testing -> show in action
+
+- Final thoughts
+- Pitch follow-up courses/workshops
+- Q&A round
+- Try to gather feedback, make the connect on LinkedIn 
+- Certificates for the participants, reach out via LinkedIn or mail
 
 ## Domain Model
 
