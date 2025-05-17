@@ -47,5 +47,3 @@ for img in "$ASSETS_DIR"/*; do
 done
 
 echo "Image resizing complete. Resized images are in $GENERATED_DIR"
-echo ""
-echo "To update markdown links in content.md, run: ./update_image_links.sh"
