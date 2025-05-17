@@ -1,13 +1,75 @@
 ---
 marp: true
 theme: pragmatech
-paginate: true
+---
+
+![bg](./assets/barcelona-spring-io.jpg)
+<!-- header: "" -->
+<!-- footer: ""-->
+
+
+
 ---
 
 <!-- _class: title -->
+![bg h:500 left:33%](assets/generated/demystify.png)
 
-# Testing Spring Boot Applications
-## Lab 1: Spring Boot Testing Basics
+# Testing Spring Boot Applications Demystified
+
+## Full-Day Workshop
+
+_Spring I/O Conference Workshop 21.05.2025_
+
+Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](https://x.com/rieckpil)
+
+
+--- 
+
+![bg left:33%](assets/generated/lab-1.jpg)
+
+# Lab 1
+
+## Introduction, Setup, and Testing Basics
+
+---
+<!-- paginate: true -->
+
+<!-- header: '' -->
+<!-- footer: '' -->
+<!--
+
+
+Notes:
+
+- Raise hands if you enjoy writing tests -> I do and hope I can change that for some of you today
+-->
+
+![bg left](assets/generated/starting.jpg)
+
+# Getting Started with Testing
+
+## How It Started
+
+---
+
+<!-- header: 'Testing Spring Boot Applications Demystified Workshop @ Spring I/O 21.05.2025' -->
+<!-- footer: '![w:32 h:32](assets/generated/logo.webp)' -->
+
+<!--
+- My story towards testing
+- What I mean with testing: automated tests written by a developer
+- Shifting left
+- How much confidence do I have to deploy on a friday afternoon to prod on a dependabot update?
+- Don't work towards 100% code coverage
+- Fast feedback loops
+- Quicker development, errors pop up more early, wouldn't say bugs, but sometimes we are overconfident only to realize after the deployment we missed a parameter or misspelled it. Avoid friction
+
+
+-->
+
+### Getting Used To Testing At Work
+
+![](assets/generated/pr-reject.png)
 
 ---
 <!--
@@ -39,6 +101,16 @@ paginate: true
 
 ---
 
+- Understanding the Motivation for Testing
+- Foundation of Testing in Spring Boot
+- Unit Testing Spring Boot Application
+- Sliced Testing with Spring Boot
+- Integration Testing
+- Common Spring Boot Testing Pitfalls and How to Avoid Them
+- General Testing Best Practices & AI Outlook
+
+
+---
 # Maven Basics
 
 ```xml
