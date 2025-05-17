@@ -123,6 +123,7 @@ Exercise:
 
 Exercise:
 - Seeing MockMvc vs. TestRestTemplate in action
+- Provide Stubbing for WireMock for a HTTP call made during application startup time to ensure the containers launches
 - Setup Testcontainers and WireMock as Docker containers
 - Improve test for context caching
 
