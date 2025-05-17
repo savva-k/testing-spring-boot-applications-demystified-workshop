@@ -24,23 +24,23 @@ import pragmatech.digital.workshops.lab1.util.TimeProvider;
  * 4. Use verify() to ensure that the mocks were called as expected.
  */
 @ExtendWith(MockitoExtension.class)  // You'll need this annotation for JUnit 5 with Mockito
-public class Exercise2_MockitoBasics {
+public class Exercise2MockitoTest {
 
     // TODO: Add necessary fields for mocks and class under test
     @Mock
     private BookService bookService; // This is how you create a mock
-    
+
     @Mock
     private UserService userService;
-    
+
     @Mock
     private TimeProvider timeProvider;
-    
+
     @InjectMocks
     private LoanService loanService; // This will inject the mocks above
-    
+
     // Setup is automatically handled by MockitoExtension and @Mock/@InjectMocks annotations
-    
+
     @Test
     @DisplayName("Test borrowBook creates loan when conditions are met")
     void testBorrowBook() {
@@ -53,7 +53,7 @@ public class Exercise2_MockitoBasics {
         // - A new loan is created
         // - Book status is updated
     }
-    
+
     @Test
     @DisplayName("Test returnBook marks loan as returned")
     void testReturnBook() {
@@ -64,7 +64,7 @@ public class Exercise2_MockitoBasics {
         // - Return date is set
         // - Book status is updated
     }
-    
+
     @Test
     @DisplayName("Test findOverdueLoans returns loans that are past due date")
     void testFindOverdueLoans() {

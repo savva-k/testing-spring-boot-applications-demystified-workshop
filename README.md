@@ -33,7 +33,7 @@ The codespace includes:
 
 For more information, see the [Codespaces documentation](.devcontainer/README.md).
 
-## Todos:
+## Todos
 
 - [ ] ZIP Version to share for non-git Users
 - [ ] Workshop infos, links for attendees on my company website
@@ -41,13 +41,13 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
 
 ## Workshop Slots
 
-9 AM - 10:45: Lab 1 105 minutes
-10:45 - 11:05: Coffee Break
-11:05 - 13:00: Lab 2 115 minutes
-13:00 - 14:00 Lunch
-14:00 - 15:30: Lab 3 90 minutes
-15:30 - 15:50 Coffee Break
-15:50 - 17:00: Lab 4 70 minutes
+- 9 AM - 10:45: Lab 1 (105 minutes)
+- 10:45 - 11:05: **Coffee Break**
+- 11:05 - 13:00: Lab 2 (115 minutes)
+- 13:00 - 14:00 **Lunch**
+- 14:00 - 15:30: Lab 3 (90 minutes)
+- 15:30 - 15:50 **Coffee Break**
+- 15:50 - 17:00: Lab 4 (70 minutes)
 
 ### Lab 1 (105 Minutes): Introduction, Welcome, Code Setup, Spring Boot Testing Fundamentals
 
@@ -77,6 +77,8 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
   - External collaborators and dependency injection for testability
   - Sample test to showcase
   - How to handle static? -> Date.now() example
+
+- Checking out the project for the workshop
 
 Exercises: 
 - JUnit: Creating custom JUnit 5 extensions, explore parameterized tests
