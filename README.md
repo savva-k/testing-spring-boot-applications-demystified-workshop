@@ -10,8 +10,8 @@ This workshop is designed to demystify testing in Spring Boot applications throu
 
 ## Workshop Format
 
-- One-day workshop (approximately 6-7 hours of instruction)
-- Four main slots, ranging from 70-110 minutes each
+- Full-day workshop
+- Four main labs, ranging from 70-110 minutes each
 - Hands-on exercises with provided solutions
 - Building on a consistent domain model (a library management system)
 
@@ -134,7 +134,7 @@ Exercise:
   - 3. JUnit 4 vs. 5 pitfall
 - Best practices for testing Spring Boot applications
   - 1. Parallelizing tests
-  - 2. Get help from AI
+  - 2. Get help from AI -> show Diffblue, Claude Code etc.
   - 3. Mutation testing -> show in action
 
 - AI and testing
@@ -146,7 +146,7 @@ Exercise:
   - Still feature dev happening, see @ServiceConnection, MockMvcTester
 
 - Pitch follow-up courses/workshops
-  - Want to also onboard your colleauges? Being the only one in the office to care about testing is hard
+  - Want to also onboard your colleges? Being the only one in the office to care about testing is hard
   - On-demand courses
 
 - Summary
