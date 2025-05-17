@@ -41,15 +41,15 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
 
 ## Workshop Slots
 
-9 AM - 10:45: Slot 1 105 minutes
+9 AM - 10:45: Lab 1 105 minutes
 10:45 - 11:05: Coffee Break
-11:05 - 13:00: Slot 2 115 minutes
+11:05 - 13:00: Lab 2 115 minutes
 13:00 - 14:00 Lunch
-14:00 - 15:30: Slot 3 90 minutes
+14:00 - 15:30: Lab 3 90 minutes
 15:30 - 15:50 Coffee Break
-15:50 - 17:00: Slot 4 70 minutes
+15:50 - 17:00: Lab 4 70 minutes
 
-### Slot 1 (105 Minutes): Introduction, Welcome, Code Setup, Spring Boot Testing Fundamentals
+### Lab 1 (105 Minutes): Introduction, Welcome, Code Setup, Spring Boot Testing Fundamentals
 
 - Introduction to the workshop, show goals for the day
 - Timeline, breaks, questions, code, and exercises
@@ -83,7 +83,7 @@ Exercises:
 - Mockito: Explore stubbing, see default mock behavior
 - AssertJ: Explore the fluent API, chaining assertions, expecting exceptions
 
-### Slot 2 (115 Minutes): Testing Spring MVC and Data JPA with Test Slices
+### Lab 2 (115 Minutes): Testing Spring MVC and Data JPA with Test Slices
 
 - Discuss Exercise from Slot 1
 
@@ -108,7 +108,7 @@ Exercise:
 
 - Discuss Exercise solutions for Slot 2
 
-### Slot 3 (90 Minutes): Integration Testing with Testcontainers and WireMock
+### Lab 3 (90 Minutes): Integration Testing with Testcontainers and WireMock
 
 - Full application testing with @SpringBootTest
 - Testing with WebClient and WebTestClient
@@ -124,23 +124,37 @@ Exercise:
 - Setup Testcontainers and WireMock as Docker containers
 - Improve test for context caching
 
-### Slot 4 (70 Minutes): Advanced Testing Techniques and Best Practices
+### Lab 4 (70 Minutes): Advanced Testing Techniques and Best Practices
 
 - Discuss Exercise from Slot 3
+
 - Common Spring Boot testing pitfalls and how to avoid them
-  - 1. ABC
-  - 2. @SpringBootTest Obsession
+  - 1. @SpringBootTest Obsession
+  - 2. @Mock, @MockBean, @MockitoBean
   - 3. JUnit 4 vs. 5 pitfall
 - Best practices for testing Spring Boot applications
   - 1. Parallelizing tests
   - 2. Get help from AI
   - 3. Mutation testing -> show in action
 
-- Final thoughts
+- AI and testing
+  - GitHub Copilot
+  - Diffblue
+  - Claude COde
+
+- Outlook
+  - Still feature dev happening, see @ServiceConnection, MockMvcTester
+
 - Pitch follow-up courses/workshops
-- Q&A round
+  - Want to also onboard your colleauges? Being the only one in the office to care about testing is hard
+  - On-demand courses
+
+- Summary
+
 - Try to gather feedback, make the connect on LinkedIn 
 - Certificates for the participants, reach out via LinkedIn or mail
+
+- Q&A round
 
 ## Domain Model
 
