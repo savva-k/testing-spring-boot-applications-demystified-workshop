@@ -1,13 +1,35 @@
 ---
 marp: true
 theme: pragmatech
-paginate: true
+---
+
+![bg](./assets/barcelona-spring-io.jpg)
+<!-- header: "" -->
+<!-- footer: ""-->
+
+
+
 ---
 
 <!-- _class: title -->
+![bg h:500 left:33%](assets/generated/demystify.png)
 
-# Testing Spring Boot Applications
-## Lab 2: Sliced Testing
+# Testing Spring Boot Applications Demystified
+
+## Full-Day Workshop
+
+_Spring I/O Conference Workshop 21.05.2025_
+
+Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](https://x.com/rieckpil)
+
+
+--- 
+
+![bg left:33%](assets/generated/lab-2.jpg)
+
+# Lab 2
+
+## Sliced Testing
 
 ---
 

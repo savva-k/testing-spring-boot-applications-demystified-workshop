@@ -97,6 +97,7 @@ Exercises:
   - In-memory vs. real database
   - How to prepare data
   - Transaction management
+  - Enable logs to see when the persistence context flushes to the database
 - Understanding JPA's transaction behavior and EntityManager
 - Testing custom database queries, including native SQL queries
 

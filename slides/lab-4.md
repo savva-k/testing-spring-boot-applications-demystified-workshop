@@ -1,13 +1,31 @@
 ---
 marp: true
 theme: pragmatech
-paginate: true
+---
+
+![bg](./assets/barcelona-spring-io.jpg)
+
 ---
 
 <!-- _class: title -->
+![bg h:500 left:33%](assets/generated/demystify.png)
 
-# Testing Spring Boot Applications
-## Lab 4: Advanced Testing & Best Practices
+# Testing Spring Boot Applications Demystified
+
+## Full-Day Workshop
+
+_Spring I/O Conference Workshop 21.05.2025_
+
+Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](https://x.com/rieckpil)
+
+
+--- 
+
+![bg left:33%](assets/generated/lab-4.jpg)
+
+# Lab 4
+
+## Best Practices, Pitfalls, AI & Summary
 
 ---
 
