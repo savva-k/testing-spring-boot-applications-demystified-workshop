@@ -4,14 +4,15 @@ theme: pragmatech
 ---
 
 ![bg](./assets/barcelona-spring-io.jpg)
-<!-- header: "" -->
-<!-- footer: ""-->
-
-
 
 ---
 
-<!-- _class: title -->
+<!--
+
+Question: Who is writing tests manually and who is enjoying it?
+
+--> 
+
 ![bg h:500 left:33%](assets/generated/demystify.png)
 
 # Testing Spring Boot Applications Demystified
@@ -25,11 +26,69 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 --- 
 
+<!--
+
+- Welcome, Introduction
+  - 
+- Overview of the workshop  
+- When to eat, toilet, WLAN
+
+-->
+
+<!-- header: 'Testing Spring Boot Applications Demystified Workshop @ Spring I/O 21.05.2025' -->
+<!-- footer: '![w:32 h:32](assets/generated/logo.webp)' -->
+
+# Organization
+
+- Hotel WLAN: TBD
+- Slides & Code will be shared
+- Workshop lab requirements
+  - Java 21
+  - Docker
+  - GitHub Account (preferably a personal)
+
+---
+
+### (Planned) Timeline
+
+- 9:00 - 10:45: **Lab 1 - Introduction and Spring Boot Testing Basics**  (105 minutes)
+- 10:45 - 11:05: **Coffee Break** (20 minutes)
+- 11:05 - 13:00: **Lab 2 - Sliced Testing** (115 minutes)
+- 13:00 - 14:00 **Lunch** (60 minutes)
+- 14:00 - 15:30: **Lab 3 - Integration Testing** (90 minutes)
+- 15:30 - 15:50 **Coffee Break** (20 minutes)
+- 15:50 - 17:00: **Lab 4 - Pitfalls, Best Practices, AI & Outlook** (70 minutes)
+
+---
+![bg right:33%](assets/generated/hza.jpg)
+
+## Workshop Instructor: Philip
+
+- Self-employed IT consultant from Herzogenaurach, Germany (Bavaria) 🍻
+- Blogging & content creation for more than five years. Since three years with a focus on testing Java and specifically Spring Boot applications 🍃
+- Founder of PragmaTech GmbH - Enabling Developers to Frequently Deliver Software with More Confidence 🚤
+- Enjoys writing tests 🧪
+- @rieckpil on various platforms
+
+
+---
+
+## Getting to Know Each Other
+
+- What's your name?
+- Where are you from?
+- What's your role?
+- How is automated testing handled in your team/company? 
+- Do you have any specific testing challenges? 
+- What's your expectation for this workshop?
+
+---
+
 ![bg left:33%](assets/generated/lab-1.jpg)
 
 # Lab 1
 
-## Introduction, Setup, and Testing Basics
+## Introduction and Spring Boot Testing Basics
 
 ---
 <!-- paginate: true -->
@@ -72,79 +131,313 @@ Notes:
 ![](assets/generated/pr-reject.png)
 
 ---
-<!--
 
-- Welcome, Introduction
-  - Who are u, what's your role, how is testing handled in your company? Any specific testing challenges? Any specific hopes for this wor
-- Overview of the workshop  
-- When to eat, toilet, WLAN
-- Code Spaces alternative
-- My intro to testing
+# Goals of this Workshop
 
-- 
+- Demystify the complexities of testing Spring Boot applications
+- Provide clear explanations, practical insights, and actionable best practices
+- Become more productive and confident in your development and testing efforts
 
--->
+---
 
 <!-- _class: section -->
 
-# SECTION 1
 # Spring Boot Testing Basics
+## Spring Boot Starter Test, Build Tools, Conventions, Unit Testing
 
 ---
 
-# Development Environment Setup
+## Why Do We Test Software
 
-- Java 21
-- IDE (IntelliJ, VS Code, Eclipse)
-- Maven
-- Git
+- Shift Left
+- Catch Bugs Early
+- Confidence in Code Changes
+- Documentation
+- Regression Prevention
+- Become more Productive
+
+---
+
+<style>
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
+### Naming Things Is Hard
+
+![h:700 center](assets/cloud.svg)
 
 ---
 
-- Understanding the Motivation for Testing
-- Foundation of Testing in Spring Boot
-- Unit Testing Spring Boot Application
-- Sliced Testing with Spring Boot
-- Integration Testing
-- Common Spring Boot Testing Pitfalls and How to Avoid Them
-- General Testing Best Practices & AI Outlook
+### My Pragmatic Test Name Approach
 
+1. **Unit Tests**: Tests that verify the functionality of a single, isolated component (like a method or class) by mocking or stubbing all external dependencies.
+2. **Integration Tests**: Tests that verify interactions between two or more components work correctly together, with real implementations replacing some mocks.
+3. **E2E**: Tests that validate the entire application workflow from start to finish, simulating real user scenarios across all components and external dependencies.
 
 ---
-# Maven Basics
 
-```xml
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
+## Maven Build Lifecycle
+
+![bg h:500 right:33%](assets/lifecycle.svg)
+
+- **Maven Surfire Plugin** for unit tests: default postfix  `*Test` (e.g. `CustomerTest`)
+- **Maven Failsafe Plugin** for integration tests: default postfix `*IT` (e.g. `CheckoutIT`)
+- Reason for splitting: different **parallelization** options, better **organisation**
+
+---
+
+### Spring Boot Starter Test
+
+<!--
+
+Notes:
+
+- Show the `spring-boot-starter-test` dependency and Maven dependency tree
+- Show manual overriden
+
+
+-->
+
+![bg right:33%](assets/generated/swiss.jpg)
+
+- aka. "Testing Swiss Army Knife"
+- Batteries-included for testing
+- Dependency management for:
+  - JUnit Jupiter
+  - Mockito
+  - AssertJ
+  - Awaitility
+  - etc.
+- We can manually override the dependency versions
+
+---
+
+---
+
+<!--
+Notes:
+- Go to IDE to show the start
+- Navigate to the parent pom to see the management
+- Show the sample test to have seen the libraries at least once
+
+Tips:
+- Favor JUnit 5 over JUnit 4
+- Pick one assertion library or at least not mix it within the same test class
+-->
+
+```shell
+[INFO] +- org.springframework.boot:spring-boot-starter-test:jar:3.4.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-test:jar:3.4.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:3.4.5:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:2.9.0:test
+[INFO] |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.2:test
+[INFO] |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.3:test
+[INFO] |  +- net.minidev:json-smart:jar:2.5.2:test
+[INFO] |  |  \- net.minidev:accessors-smart:jar:2.5.2:test
+[INFO] |  |     \- org.ow2.asm:asm:jar:9.7.1:test
+[INFO] |  +- org.assertj:assertj-core:jar:3.26.3:test
+[INFO] |  |  \- net.bytebuddy:byte-buddy:jar:1.15.11:test
+[INFO] |  +- org.awaitility:awaitility:jar:4.3.0:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter:jar:5.11.4:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-api:jar:5.11.4:test
+[INFO] |  |  |  +- org.junit.platform:junit-platform-commons:jar:1.11.4:test
+[INFO] |  |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-params:jar:5.11.4:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.11.4:test
+[INFO] |  |     \- org.junit.platform:junit-platform-engine:jar:1.11.4:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.17.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  +- org.mockito:mockito-junit-jupiter:jar:5.17.0:test
+[INFO] |  +- org.skyscreamer:jsonassert:jar:1.5.3:test
+[INFO] |  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[INFO] |  +- org.springframework:spring-core:jar:6.2.6:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:6.2.6:compile
+[INFO] |  +- org.springframework:spring-test:jar:6.2.6:test
+[INFO] |  \- org.xmlunit:xmlunit-core:jar:2.10.0:test
 ```
 
 ---
 
-# Maven Lifecycle
+## Transitive Dependency #1: JUnit
 
-1. **validate**: validate project structure
-2. **compile**: compile source code
-3. **test**: run tests
-4. **package**: package compiled code
-5. **verify**: run integration tests
-6. **install**: install in local repository
-7. **deploy**: deploy to remote repository
+- Introduction to JUnit 5
 
 ---
 
-# Spring Boot Testing Basics
 
-- Built on JUnit 5 (Jupiter)
-- Mockito integration
-- Spring Test Context Framework
-- Auto-configuration for tests
-- Sliced testing support
+## Transitive Dependency #1: Mockito
 
+- Introduction to JUnit 5
+
+---
+
+
+## Transitive Dependency #1: AssertJ
+
+- Introduction to JUnit 5
+
+---
+
+## Transitive Dependency #1: Hamcrest
+
+- Introduction to JUnit 5
+
+---
+
+
+## Transitive Dependency #1: Awaitility
+
+- Introduction to JUnit 5
+
+---
+
+## Transitive Dependency #1: JsonPath
+
+- Introduction to JUnit 5
+
+---
+
+## Transitive Dependency #1: JSONAssert
+
+- Introduction to JUnit 5
+
+---
+
+## Transitive Dependency #1: XMLUNit
+
+- Introduction to JUnit 5
+
+---
+
+## Unit Testing with Spring Boot
+
+- Provide collaborators from outside (dependency injection) -> no `new` inside your code
+- Develop small, single responsibility classes
+- Test only the public API of your class
+- Verify behavior not implementation details
+- TDD can help design (better) classes
+
+---
+### Avoid Static Method Access
+
+```java
+@Service
+public class BirthdayService {
+
+  public boolean isTodayBirthday(LocalDate birthday) {
+    LocalDate today = LocalDate.now();
+
+    return today.getMonth() == birthday.getMonth()
+      && today.getDayOfMonth() == birthday.getDayOfMonth();
+  }
+}
+```
+
+---
+
+### Better Alternative
+
+```java
+@Service
+public class BirthdayServiceWithClock {
+
+  private final Clock clock;
+
+  public BirthdayServiceWithClock(Clock clock) {
+    this.clock = clock;
+  }
+
+  public boolean isTodayBirthday(LocalDate birthday) {
+    LocalDate today = LocalDate.now(clock);
+
+    return today.getMonth() == birthday.getMonth()
+      && today.getDayOfMonth() == birthday.getDayOfMonth();
+  }
+}
+```
+
+---
+
+```java
+@Test
+void shouldReturnTrueWhenTodayIsBirthday() {
+  // Arrange
+  LocalDate fixedDate = LocalDate.of(2025, 5, 15);
+  Clock fixedClock = Clock.fixed(
+    fixedDate.atStartOfDay(ZONE_ID).toInstant(),
+    ZONE_ID
+  );
+
+  BirthdayServiceWithClock cut = new BirthdayServiceWithClock(fixedClock);
+  LocalDate birthday = LocalDate.of(1990, 5, 15); // Same month and day
+
+  // Act
+  boolean result = cut.isTodayBirthday(birthday);
+
+  // Assert
+  assertThat(result).isTrue();
+}
+```
+
+---
+
+### Check Your Imports
+
+- Nothing Spring-related here
+- Rely only on JUnit, Mockito and an assertion library
+
+```java
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
+```
+
+---
+
+## Unify Test Structure
+
+- Use a consistent test method naming: givenWhenThen, shouldWhen, etc.
+- Structure test for the Arrange/Act/Assert test setup
+
+```java
+@Test
+void should_When_() {
+
+  // Arrange
+  // ... setting up objects, data, collaborators, etc.
+
+  // Act
+  // ... performing the action to be tested on the class under test
+
+  // Assert
+  // ... verifying the expected outcome
+}
+```
+
+---
+
+## Unit Testing Has Limits
+
+- **Request Mapping**: Does `/api/users/{id}` actually resolve to your desired method?
+- **Validation**: Will incomplete request bodys result in a 400 bad request or return an accidental 200?
+- **Serialization**: Are your JSON objects serialized and deserialized correctly?
+- **Headers**: Are you setting Content-Type or custom headers correctly?
+- **Security**: Are your Spring Security configuration and other authorization checks enforced?
+- **Database**: Can we effectively map our complex JPA entity to a database table?
+- etc.
+- 
 ---
 
 <!-- _class: code -->
@@ -292,9 +585,16 @@ public boolean isOverdue(BookLoan loan, Clock clock) {
 
 ---
 
-# Lab 1: Exercises
+## Project Setup
 
 1. Write unit tests for the Book entity
 2. Create a custom JUnit 5 extension
-3. Refactor time-based code to use Clock
-4. Write tests for the BookService class
+3. Refactor the `isOverdue` method to use a `Clock` parameter
+
+---
+
+## Lab 1: Exercises
+
+1. Write unit tests for the Book entity
+2. Create a custom JUnit 5 extension
+3. Refactor the `isOverdue` method to use a `Clock` parameter
