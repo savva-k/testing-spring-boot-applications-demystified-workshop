@@ -263,54 +263,196 @@ Tips:
 
 ---
 
-## Transitive Dependency #1: JUnit
+## Transitive Dependency #1: JUnit 5
 
-- Introduction to JUnit 5
+- Modern testing framework for Java applications
+- Key features: parameterized tests, nested tests, custom extensions
+- Core component of Spring Boot test infrastructure
 
----
+```java
+@Test
+void shouldCreateNewBook() {
+  Book book = new Book("1234", "Spring Boot Testing", "Test Author");
 
+  assertEquals("1234", book.getIsbn());
+}
 
-## Transitive Dependency #1: Mockito
-
-- Introduction to JUnit 5
-
----
-
-
-## Transitive Dependency #1: AssertJ
-
-- Introduction to JUnit 5
-
----
-
-## Transitive Dependency #1: Hamcrest
-
-- Introduction to JUnit 5
-
----
-
-
-## Transitive Dependency #1: Awaitility
-
-- Introduction to JUnit 5
+@ParameterizedTest
+@CsvSource({
+  "1234, Spring Boot Testing, Test Author",
+  "5678, Advanced Spring, Another Author"
+})
+void shouldCreateBooksFromParameters(String isbn, String title, String author) {
+  Book book = new Book(isbn, title, author);
+  assertNotNull(book);
+}
+```
 
 ---
 
-## Transitive Dependency #1: JsonPath
+## Transitive Dependency #2: Mockito
 
-- Introduction to JUnit 5
+- Mocking framework for unit tests
+- Used to isolate the class under test from its dependencies
+- Allows verification of interactions between objects
+
+```java
+@ExtendWith(MockitoExtension.class)
+class BookServiceTest {
+  
+  @Mock
+  private BookRepository bookRepository;
+  
+  @InjectMocks
+  private BookService bookService;
+  
+  @Test
+  void shouldReturnBookWhenFound() {
+    when(bookRepository.findByIsbn("1234")).thenReturn(Optional.of(expectedBook));
+    
+    Optional<Book> result = bookService.getBookByIsbn("1234");
+    
+    verify(bookRepository).findByIsbn("1234");
+  }
+}
+```
 
 ---
 
-## Transitive Dependency #1: JSONAssert
+## Transitive Dependency #3: AssertJ
 
-- Introduction to JUnit 5
+- Fluent assertion library for Java tests
+- Provides more readable, chain-based assertions
+- Rich set of assertions for collections, exceptions, and more
+
+```java
+@Test
+void shouldProvideFluentAssertions() {
+  List<Book> books = List.of(
+    new Book("1234", "Spring Boot Testing", "Test Author"),
+    new Book("5678", "Advanced Spring", "Another Author")
+  );
+  
+  assertThat(books)
+    .hasSize(2)
+    .extracting(Book::getTitle)
+    .containsExactly("Spring Boot Testing", "Advanced Spring");
+}
+```
 
 ---
 
-## Transitive Dependency #1: XMLUNit
+## Transitive Dependency #4: Hamcrest
 
-- Introduction to JUnit 5
+- Framework for writing matcher objects
+- Used for creating more readable assertions
+- Often used alongside JUnit for expressive tests
+
+```java
+@Test
+void shouldMatchWithHamcrest() {
+  Book book = new Book("1234", "Spring Boot Testing", "Test Author");
+  
+  assertThat(book.getIsbn(), is("1234"));
+  assertThat(book.getTitle(), allOf(
+    startsWith("Spring"),
+    containsString("Testing"),
+    not(emptyString())
+  ));
+}
+```
+---
+
+## Transitive Dependency #5: Awaitility
+
+- Library for testing asynchronous systems
+- Provides a DSL for expressing expectations on async operations
+- Great for testing concurrent code and background tasks
+
+```java
+@Test
+void shouldEventuallyCompleteAsyncOperation() {
+  CompletableFuture<Book> futureBook = CompletableFuture.supplyAsync(() -> {
+    try {
+      Thread.sleep(300);
+      return new Book("1234", "Async Testing", "Author");
+    } catch (InterruptedException e) {
+      return null;
+    }
+  });
+  
+  await().atMost(1, TimeUnit.SECONDS)
+    .until(futureBook::isDone);
+}
+```
+
+---
+
+## Transitive Dependency #6: JsonPath
+
+- Library for parsing and evaluating JSON documents
+- Used for extracting and asserting on JSON structures
+- Especially useful in REST API testing
+
+```java
+@Test
+void shouldParseAndEvaluateJson() throws Exception {
+  // Given
+  String json = "{\"book\":{\"isbn\":\"1234\",\"title\":\"JSON Testing\",\"author\":\"Test Author\"}}";
+  
+  DocumentContext context = JsonPath.parse(json);
+  
+  assertThat(context.read("$.book.isbn", String.class)).isEqualTo("1234");
+  assertThat(context.read("$.book.title", String.class)).isEqualTo("JSON Testing");
+  
+  // Assert on nested structure
+  Map<String, Object> book = context.read("$.book");
+  assertThat(book)
+    .containsEntry("isbn", "1234")
+    .containsEntry("title", "JSON Testing");
+}
+```
+
+---
+
+## Transitive Dependency #7: JSONAssert
+
+- Library specifically for JSON assertion in tests
+- Provides powerful comparison of JSON structures
+- Supports strict and lenient comparison modes
+
+```java
+@Test
+void shouldAssertJsonEquality() throws Exception {
+  String actual = "{\"isbn\":\"1234\",\"title\":\"JSON Testing\",\"author\":\"Test Author\"}";
+  String expected = "{\"isbn\":\"1234\",\"title\":\"JSON Testing\"}";
+  
+  // Strict mode would fail as expected is missing the author field
+  JSONAssert.assertEquals(expected, actual, false);
+}
+```
+
+---
+
+## Transitive Dependency #8: XMLUnit
+
+- Library for testing XML documents
+- Provides comparison and validation of XML
+- Useful for testing SOAP services or XML outputs
+
+```java
+@Test
+void shouldCompareXmlDocuments() {
+  String control = "<book><isbn>1234</isbn><title>XML Testing</title></book>";
+  String test = "<book><isbn>1234</isbn><title>XML Testing</title></book>";
+  
+  Diff diff = DiffBuilder.compare(Input.fromString(control))
+    .withTest(Input.fromString(test))
+    .build();
+  
+  assertFalse(diff.hasDifferences(), diff.toString());
+}
+```
 
 ---
 
