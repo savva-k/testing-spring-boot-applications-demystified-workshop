@@ -4,6 +4,7 @@ theme: pragmatech
 ---
 
 ![bg](./assets/barcelona-spring-io.jpg)
+
 ---
 
 <!-- _class: title -->
@@ -17,7 +18,6 @@ _Spring I/O Conference Workshop 21.05.2025_
 
 Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](https://x.com/rieckpil)
 
-
 --- 
 
 ![bg left:33%](assets/generated/lab-3.jpg)
@@ -25,6 +25,10 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 # Lab 3
 
 ## Integration Testing
+
+---
+
+## Discuss Exercises from Lab 2
 
 ---
 <!-- _class: section -->

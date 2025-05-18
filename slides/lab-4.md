@@ -18,14 +18,17 @@ _Spring I/O Conference Workshop 21.05.2025_
 
 Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](https://x.com/rieckpil)
 
-
 --- 
 
 ![bg left:33%](assets/generated/lab-4.jpg)
 
 # Lab 4
 
-## Best Practices, Pitfalls, AI & Summary
+## Best Practices, Pitfalls, AI & Outlook
+
+---
+
+## Discuss Exercises from Lab 3
 
 ---
 
