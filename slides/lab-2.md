@@ -33,6 +33,18 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 ---
 
+## Unit Testing Has Limits
+
+- **Request Mapping**: Does `/api/users/{id}` actually resolve to your desired method?
+- **Validation**: Will incomplete request bodys result in a 400 bad request or return an accidental 200?
+- **Serialization**: Are your JSON objects serialized and deserialized correctly?
+- **Headers**: Are you setting Content-Type or custom headers correctly?
+- **Security**: Are your Spring Security configuration and other authorization checks enforced?
+- **Database**: Can we effectively map our complex JPA entity to a database table?
+- etc.
+-
+---
+
 <!-- _class: section -->
 
 # SECTION 2

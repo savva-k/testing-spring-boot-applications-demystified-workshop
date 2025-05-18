@@ -215,8 +215,6 @@ Notes:
 
 ---
 
----
-
 <!--
 Notes:
 - Go to IDE to show the start
@@ -263,11 +261,12 @@ Tips:
 
 ---
 
-## Transitive Dependency #1: JUnit 5
+## Transitive Test Dependency: JUnit 5
 
 - Modern testing framework for Java applications
-- Key features: parameterized tests, nested tests, custom extensions
-- Core component of Spring Boot test infrastructure
+- Rewrite of JUnit 4
+- JUnit 5 = JUnit Jupiter + JUnit Vintage + JUnit Platform
+- Key features: parameterized tests, nested tests, extensions, parallelization
 
 ```java
 @Test
@@ -277,24 +276,23 @@ void shouldCreateNewBook() {
   assertEquals("1234", book.getIsbn());
 }
 
-@ParameterizedTest
-@CsvSource({
-  "1234, Spring Boot Testing, Test Author",
-  "5678, Advanced Spring, Another Author"
-})
-void shouldCreateBooksFromParameters(String isbn, String title, String author) {
-  Book book = new Book(isbn, title, author);
-  assertNotNull(book);
-}
 ```
 
 ---
 
-## Transitive Dependency #2: Mockito
+## Transitive Test Dependency: Mockito
 
 - Mocking framework for unit tests
 - Used to isolate the class under test from its dependencies
 - Allows verification of interactions between objects
+- Golden Mockito Rules:
+  - Don't mock what you don't own
+  - Don't mock value objects
+  - Don't mock everything
+  - Show some love with your tests
+
+---
+
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -319,7 +317,7 @@ class BookServiceTest {
 
 ---
 
-## Transitive Dependency #3: AssertJ
+## Transitive Test Dependency: AssertJ
 
 - Fluent assertion library for Java tests
 - Provides more readable, chain-based assertions
@@ -342,11 +340,11 @@ void shouldProvideFluentAssertions() {
 
 ---
 
-## Transitive Dependency #4: Hamcrest
+## Transitive Test Dependency: Hamcrest
 
-- Framework for writing matcher objects
-- Used for creating more readable assertions
-- Often used alongside JUnit for expressive tests
+- Fluent assertion library
+- Occasionally used within Spring Test, e.g. MockMvc verifications
+- Implementation for many other programming languages
 
 ```java
 @Test
@@ -363,11 +361,14 @@ void shouldMatchWithHamcrest() {
 ```
 ---
 
-## Transitive Dependency #5: Awaitility
+## Transitive Test Dependency: Awaitility
 
-- Library for testing asynchronous systems
+- Library for testing asynchronous code
 - Provides a DSL for expressing expectations on async operations
 - Great for testing concurrent code and background tasks
+
+
+---
 
 ```java
 @Test
@@ -381,14 +382,15 @@ void shouldEventuallyCompleteAsyncOperation() {
     }
   });
   
-  await().atMost(1, TimeUnit.SECONDS)
+  await()
+    .atMost(1, TimeUnit.SECONDS)
     .until(futureBook::isDone);
 }
 ```
 
 ---
 
-## Transitive Dependency #6: JsonPath
+## Transitive Test Dependency: JsonPath
 
 - Library for parsing and evaluating JSON documents
 - Used for extracting and asserting on JSON structures
@@ -397,36 +399,33 @@ void shouldEventuallyCompleteAsyncOperation() {
 ```java
 @Test
 void shouldParseAndEvaluateJson() throws Exception {
-  // Given
-  String json = "{\"book\":{\"isbn\":\"1234\",\"title\":\"JSON Testing\",\"author\":\"Test Author\"}}";
+  String json = """
+    { "book": {"isbn": "1234", "title": "JSON Testing", "author": "Test Author"}}""";
   
   DocumentContext context = JsonPath.parse(json);
   
   assertThat(context.read("$.book.isbn", String.class)).isEqualTo("1234");
   assertThat(context.read("$.book.title", String.class)).isEqualTo("JSON Testing");
-  
-  // Assert on nested structure
-  Map<String, Object> book = context.read("$.book");
-  assertThat(book)
-    .containsEntry("isbn", "1234")
-    .containsEntry("title", "JSON Testing");
 }
 ```
 
 ---
 
-## Transitive Dependency #7: JSONAssert
+## Transitive Test Dependency: JSONAssert
 
-- Library specifically for JSON assertion in tests
+- Assertion library for JSON data structures
 - Provides powerful comparison of JSON structures
 - Supports strict and lenient comparison modes
 
 ```java
 @Test
 void shouldAssertJsonEquality() throws Exception {
-  String actual = "{\"isbn\":\"1234\",\"title\":\"JSON Testing\",\"author\":\"Test Author\"}";
-  String expected = "{\"isbn\":\"1234\",\"title\":\"JSON Testing\"}";
-  
+  String actual = """
+    { "isbn": "1234", "title": "JSON Testing", "author": "Test Author"}""";
+
+  String expected = """
+    { "isbn": "1234", "title": "JSON Testing"}""";
+
   // Strict mode would fail as expected is missing the author field
   JSONAssert.assertEquals(expected, actual, false);
 }
@@ -434,7 +433,7 @@ void shouldAssertJsonEquality() throws Exception {
 
 ---
 
-## Transitive Dependency #8: XMLUnit
+## Transitive Test Dependency: XMLUnit
 
 - Library for testing XML documents
 - Provides comparison and validation of XML
@@ -456,7 +455,7 @@ void shouldCompareXmlDocuments() {
 
 ---
 
-## Unit Testing with Spring Boot
+## Design For (Unit) Testability with Spring Boot
 
 - Provide collaborators from outside (dependency injection) -> no `new` inside your code
 - Develop small, single responsibility classes
@@ -548,7 +547,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 ---
 
-## Unify Test Structure
+### Unify Test Structure
 
 - Use a consistent test method naming: givenWhenThen, shouldWhen, etc.
 - Structure test for the Arrange/Act/Assert test setup
@@ -570,21 +569,9 @@ void should_When_() {
 
 ---
 
-## Unit Testing Has Limits
-
-- **Request Mapping**: Does `/api/users/{id}` actually resolve to your desired method?
-- **Validation**: Will incomplete request bodys result in a 400 bad request or return an accidental 200?
-- **Serialization**: Are your JSON objects serialized and deserialized correctly?
-- **Headers**: Are you setting Content-Type or custom headers correctly?
-- **Security**: Are your Spring Security configuration and other authorization checks enforced?
-- **Database**: Can we effectively map our complex JPA entity to a database table?
-- etc.
-- 
----
-
 <!-- _class: code -->
 
-# JUnit 5 & Mockito - The Foundation
+## A Standard Unit Test
 
 ```java
 @Test
@@ -605,72 +592,23 @@ void testBookService() {
 
 ---
 
-# Design for Testability
+## JUnit Jupiter Extension API
 
-## Prefer Constructor Injection
+- Important concept to understand
+- Makes JUnit 5 extensible
+- Spring integration, later `SpringExtension`
+- Successor of JUnit 4's `@RunWith`/`@Rule` API
 
-```java
-// Hard to test
-public class BookService {
-    private final BookRepository bookRepository = new BookRepositoryImpl();
-}
-
-// Testable
-public class BookService {
-    private final BookRepository bookRepository;
-    
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
-}
-```
-
----
-
-# Avoiding Static and Direct Instantiation
-
-```java
-// Hard to test
-public LocalDate getDueDate() {
-    return LocalDate.now().plusDays(14);
-}
-
-// Testable
-public LocalDate getDueDate(Clock clock) {
-    return LocalDate.now(clock).plusDays(14);
-}
-```
-
----
-
-# Don't Overuse Mockito
-
-- Mocks can make tests brittle
-- Consider using real objects when:
-  - They have no external dependencies
-  - They're simple value objects
-  - They're collections or other standard library classes
-
----
-
-<!-- _class: code -->
-
-# JUnit 5 Extensions
 
 ```java
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
-    @Mock
-    private BookRepository bookRepository;
-    
-    @InjectMocks
-    private BookService bookService;
+
 }
 ```
 
 ---
 
-# Exercise: Write a JUnit Jupiter Extension
 
 Create a custom extension for timing tests:
 
@@ -699,44 +637,11 @@ public class TimingExtension implements BeforeTestExecutionCallback,
 
 ---
 
-# Refactoring Time-Based Code
+# Time For Some Exercises
+## Lab 1
 
-Before:
-```java
-public boolean isOverdue(BookLoan loan) {
-    return LocalDate.now().isAfter(loan.getDueDate());
-}
-```
-
-After:
-```java
-public boolean isOverdue(BookLoan loan, Clock clock) {
-    return LocalDate.now(clock).isAfter(loan.getDueDate());
-}
-```
-
----
-
-# Spring's Testing Pyramid
-
-![Testing Pyramid](https://martinfowler.com/articles/practical-test-pyramid/testPyramid.png)
-
-- Unit Tests: Fast, focused, isolated
-- Integration Tests: Verify components work together
-- End-to-End Tests: Full application testing
-
----
-
-## Project Setup
-
-1. Write unit tests for the Book entity
-2. Create a custom JUnit 5 extension
-3. Refactor the `isOverdue` method to use a `Clock` parameter
-
----
-
-## Lab 1: Exercises
-
-1. Write unit tests for the Book entity
-2. Create a custom JUnit 5 extension
-3. Refactor the `isOverdue` method to use a `Clock` parameter
+- Set up the repository locally
+- Navigate to the `lab-1` folder in the repository 
+- Complete the tasks as described in the `README` file of that folder 
+- Time box ~ 15 - 20 minutes (and optionally the coffee break)
+- We'll discuss the solutions at the beginning of the next lab
