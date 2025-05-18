@@ -4,10 +4,6 @@ theme: pragmatech
 ---
 
 ![bg](./assets/barcelona-spring-io.jpg)
-<!-- header: "" -->
-<!-- footer: ""-->
-
-
 
 ---
 
@@ -33,6 +29,10 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 ---
 
+## Discuss Exercises from Lab 1
+
+---
+
 ## Unit Testing Has Limits
 
 - **Request Mapping**: Does `/api/users/{id}` actually resolve to your desired method?
@@ -42,7 +42,11 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 - **Security**: Are your Spring Security configuration and other authorization checks enforced?
 - **Database**: Can we effectively map our complex JPA entity to a database table?
 - etc.
--
+
+---
+
+- Provide a unit test to show limits of unit testing for controllers
+
 ---
 
 <!-- _class: section -->
