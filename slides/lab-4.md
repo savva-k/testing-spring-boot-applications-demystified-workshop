@@ -529,6 +529,8 @@ class CreateBookTests {
 - Advanced data creation patterns
 - BDD
 - Contract Testing
+- Reactive Testing
+
 
 ---
 
