@@ -45,6 +45,11 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 - Test with real external dependencies
 - Ensure end-to-end functionality
 
+- Intro to WireMock
+- Intro to Testcontainers
+- Enrich the API with calls to OpenLibrary to have stubs
+- Stub on application start and during runtime
+
 ---
 
 <!-- _class: code -->

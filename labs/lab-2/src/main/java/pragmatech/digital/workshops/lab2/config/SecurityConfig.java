@@ -3,9 +3,10 @@ package pragmatech.digital.workshops.lab2.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,87 +14,53 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-/**
- * Security configuration for the library API.
- */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
-            .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-            .authorizeHttpRequests(auth -> auth
-                // Books endpoints - public access for GET
-                .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/books/{isbn}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/books/available").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/books/search").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/books/recent").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/books/top-rated").permitAll()
-                
-                // Admin-only endpoints
-                .requestMatchers(HttpMethod.POST, "/api/books").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/books/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/books/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN")
-                
-                // Users endpoints
-                .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "LIBRARIAN")
-                .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyRole("ADMIN", "LIBRARIAN")
-                .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("ADMIN", "LIBRARIAN")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
-                
-                // Loans endpoints
-                .requestMatchers(HttpMethod.GET, "/api/loans/**").hasAnyRole("ADMIN", "LIBRARIAN")
-                .requestMatchers(HttpMethod.POST, "/api/loans/**").hasAnyRole("ADMIN", "LIBRARIAN")
-                .requestMatchers(HttpMethod.PUT, "/api/loans/**").hasAnyRole("ADMIN", "LIBRARIAN")
-                .requestMatchers(HttpMethod.DELETE, "/api/loans/**").hasRole("ADMIN")
-                
-                // Reviews endpoints
-                .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/reviews/**").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.PUT, "/api/reviews/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasRole("ADMIN")
-                
-                // Secure anything else
-                .anyRequest().authenticated()
-            )
-            .httpBasic();
-        
-        return http.build();
-    }
-    
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN")
-                .build();
-        
-        UserDetails librarian = User.builder()
-                .username("librarian")
-                .password(passwordEncoder.encode("librarian"))
-                .roles("LIBRARIAN")
-                .build();
-        
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("user"))
-                .roles("USER")
-                .build();
-        
-        return new InMemoryUserDetailsManager(admin, librarian, user);
-    }
-    
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http, LlmBotRequestFilter llmBotRequestFilter) throws Exception {
+    http
+      .csrf(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/*").authenticated()
+        .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
+        .requestMatchers(HttpMethod.DELETE, "/api/books/{isbn}").hasRole("ADMIN")
+        .anyRequest().authenticated()
+      )
+      .addFilterBefore(llmBotRequestFilter, BasicAuthenticationFilter.class)
+      .httpBasic(Customizer.withDefaults());
+
+    return http.build();
+  }
+
+  @Bean
+  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    UserDetails admin = User.builder()
+      .username("admin")
+      .password(passwordEncoder.encode("admin"))
+      .roles("ADMIN")
+      .build();
+
+    UserDetails librarian = User.builder()
+      .username("librarian")
+      .password(passwordEncoder.encode("librarian"))
+      .roles("LIBRARIAN")
+      .build();
+
+    UserDetails user = User.builder()
+      .username("user")
+      .password(passwordEncoder.encode("user"))
+      .roles("USER")
+      .build();
+
+    return new InMemoryUserDetailsManager(admin, librarian, user);
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }
