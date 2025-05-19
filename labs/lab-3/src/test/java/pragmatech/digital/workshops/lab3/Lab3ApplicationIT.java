@@ -7,7 +7,7 @@ import pragmatech.digital.workshops.lab3.config.PostgresTestContainer;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class Lab3ApplicationTests extends PostgresTestContainer {
+class Lab3ApplicationIT extends PostgresTestContainer {
 
     @Test
     void contextLoads() {

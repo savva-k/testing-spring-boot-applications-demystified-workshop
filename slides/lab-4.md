@@ -522,6 +522,16 @@ class CreateBookTests {
 
 ---
 
+## What We Couldn't Touch
+
+- E2E
+- Test involving the UI
+- Advanced data creation patterns
+- BDD
+- Contract Testing
+
+---
+
 # AI-Assisted Testing
 
 - Code generation for tests

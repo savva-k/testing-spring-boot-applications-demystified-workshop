@@ -8,7 +8,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @TestConfiguration(proxyBeanMethods = false)
 public class LocalDevTestcontainerConfig {
 
-  @Bean
+  // @Bean
   @ServiceConnection
   static PostgreSQLContainer<?> postgres() {
     return new PostgreSQLContainer<>("postgres:16-alpine")
