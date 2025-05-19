@@ -33,7 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookRepositoryPostgresTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BookRepositoryPostgresTest.class);
+    private static final Logger log =
+      LoggerFactory.getLogger(BookRepositoryPostgresTest.class);
 
     @Container
     @ServiceConnection
@@ -56,7 +57,7 @@ class BookRepositoryPostgresTest {
         Book book2 = new Book("978-2-2222-2222-2", "Java for Beginners", "Another Author", LocalDate.of(2021, 2, 2));
         Book book3 = new Book("978-3-3333-3333-3", "Python Programming", "Python Guru", LocalDate.of(2022, 3, 3));
         Book book4 = new Book("978-4-4444-4444-4", "JavaScript Mastery", "JS Expert", LocalDate.of(2019, 4, 4));
-        
+
         bookRepository.saveAll(List.of(book1, book2, book3, book4));
     }
 
@@ -68,10 +69,10 @@ class BookRepositoryPostgresTest {
         // then
         assertThat(books).isNotEmpty();
         assertThat(books).hasSize(2);
-        
+
         // The book with "Java" in the title should be ranked higher
         assertThat(books.get(0).getTitle()).contains("Java");
-        
+
         log.info("Full text search results: {}", books);
     }
 
@@ -83,7 +84,7 @@ class BookRepositoryPostgresTest {
         // then
         assertThat(books).isNotEmpty();
         books.forEach(book -> log.info("Found book with fuzzy match: {}", book.getTitle()));
-        
+
         // Should find both Java books even with typos
         assertTrue(books.stream().anyMatch(book -> book.getTitle().contains("Java")));
     }
@@ -91,7 +92,7 @@ class BookRepositoryPostgresTest {
     @Test
     void shouldHandlePostgreSQLSpecificFeatures() {
         // given
-        Book book = new Book("978-5-5555-5555-5", "Title with Special Characters: åäö", 
+        Book book = new Book("978-5-5555-5555-5", "Title with Special Characters: åäö",
                            "Author with Emoji: 😊", LocalDate.of(2023, 5, 5));
         book.setStatus(BookStatus.AVAILABLE);
         bookRepository.save(book);

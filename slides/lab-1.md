@@ -317,6 +317,10 @@ class BookServiceTest {
 
 ---
 
+- Strict Stubbing (TODO)
+
+---
+
 ## Transitive Test Dependency: AssertJ
 
 - Fluent assertion library for Java tests

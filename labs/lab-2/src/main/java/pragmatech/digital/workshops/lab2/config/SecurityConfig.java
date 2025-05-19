@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http, LlmBotRequestFilter llmBotRequestFilter) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(auth -> auth
@@ -31,7 +31,6 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/api/books/isbn/{isbn}").hasRole("ADMIN")
         .anyRequest().authenticated()
       )
-      .addFilterBefore(llmBotRequestFilter, BasicAuthenticationFilter.class)
       .httpBasic(Customizer.withDefaults());
 
     return http.build();

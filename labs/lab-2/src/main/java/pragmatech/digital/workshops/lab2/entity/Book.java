@@ -1,7 +1,6 @@
 package pragmatech.digital.workshops.lab2.entity;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

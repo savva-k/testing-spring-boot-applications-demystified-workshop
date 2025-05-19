@@ -1,9 +1,10 @@
-package pragmatech.digital.workshops.lab2.config;
+package pragmatech.digital.workshops.lab2.experiment;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import pragmatech.digital.workshops.lab2.config.BlockBotRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,6 +23,7 @@ import java.io.StringWriter;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+@Disabled("Don't do this, favor a @WebMvcTest instead")
 @ExtendWith(MockitoExtension.class)
 class LlmBotRequestFilterTest {
 

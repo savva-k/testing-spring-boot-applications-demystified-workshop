@@ -38,6 +38,7 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
 - [ ] ZIP Version to share for non-git Users
 - [ ] Workshop infos, links for attendees on my company website
 - [ ] Prepare template for the certificate of completion
+- [ ] Show IDEA short cut for fast test run
 
 ## Workshop Slots
 

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import pragmatech.digital.workshops.lab1.domain.Book;
 import pragmatech.digital.workshops.lab1.domain.BookLoan;
 import pragmatech.digital.workshops.lab1.domain.BookStatus;
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.*;
  * Solution for Exercise 2: Basic Mockito Usage
  */
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class Solution2MockitoTest {
 
     @Mock

@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * It also showcases the limitations when using PostgreSQL-specific features.
  */
 @DataJpaTest
-@ActiveProfiles("test")
 class BookRepositoryInMemoryTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BookRepositoryInMemoryTest.class);
+    private static final Logger log =
+      LoggerFactory.getLogger(BookRepositoryInMemoryTest.class);
 
     @Autowired
     private BookRepository bookRepository;
@@ -108,11 +108,12 @@ class BookRepositoryInMemoryTest {
     @Test
     void shouldDemonstrateH2CompatibilityMode() {
         // Get H2 version and PostgreSQL compatibility mode
-        String dbInfo = jdbcTemplate.queryForObject("SELECT H2VERSION() || ' (Mode: ' || MODE() || ')'", String.class);
-        log.info("Running tests with: {}", dbInfo);
+//        String dbInfo = jdbcTemplate.queryForObject("SELECT H2VERSION() || ' (Mode: ' || MODE() || ')'", String.class);
+//        log.info("Running tests with: {}", dbInfo);
 
         // Verify we're using PostgreSQL mode
         String mode = jdbcTemplate.queryForObject("SELECT MODE()", String.class);
+
         assertEquals("PostgreSQL", mode, "H2 should be running in PostgreSQL mode");
     }
 }
