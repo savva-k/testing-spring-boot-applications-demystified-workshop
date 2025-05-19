@@ -49,4 +49,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findBooksByTitleFuzzy(
             @Param("title") String title,
             @Param("similarityThreshold") double similarityThreshold);
+
+  /**
+   * Find a book by its ISBN.
+   *
+   * @param isbn the ISBN to search for
+   * @return the book with the given ISBN, if found
+   */
+  Optional<Book> findByIsbn(String isbn);
 }
