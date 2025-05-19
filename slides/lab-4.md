@@ -518,6 +518,7 @@ class CreateBookTests {
 
 - Avoid any config in the main class, show issue and how to fix
 - Talk about the order and possibilities for the application.yml for testing
+- Best ways to start Testcontainers
 
 ---
 

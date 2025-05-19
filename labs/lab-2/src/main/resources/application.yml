@@ -7,3 +7,7 @@ spring:
     open-in-view: false
   application:
     name: lab-2
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
