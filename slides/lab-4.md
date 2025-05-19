@@ -656,15 +656,6 @@ void testReactiveStream() {
 
 ---
 
-# Resources
-
-- [Official Spring Testing Documentation](https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html)
-- [Testing Spring Boot Applications Masterclass](https://your-course-url.com)
-- [Spring Boot Testing Starter Guide](https://spring.io/guides/gs/testing-web/)
-- [Testcontainers Documentation](https://www.testcontainers.org/)
-
----
-
 <!-- _class: title -->
 
 # Thank You!
