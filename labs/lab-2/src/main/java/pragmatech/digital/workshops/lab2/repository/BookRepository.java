@@ -9,77 +9,44 @@ import pragmatech.digital.workshops.lab2.entity.BookStatus;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Repository for Book entities.
- */
 @Repository
-public interface BookRepository extends JpaRepository<Book, String> {
-    
+public interface BookRepository extends JpaRepository<Book, Long> {
+
     /**
-     * Find books by author.
-     * 
-     * @param author the author name to search for
-     * @return list of books by the given author
+     * PostgreSQL-specific: Full text search on book titles with ranking.
+     * Uses PostgreSQL's to_tsvector and to_tsquery for sophisticated text searching
+     * with ranking based on relevance.
+     *
+     * @param searchTerms the search terms (e.g. "adventure dragons fantasy")
+     * @return list of books matching the search terms, ordered by relevance
      */
-    List<Book> findByAuthorContainingIgnoreCase(String author);
-    
-    /**
-     * Find books by title.
-     * 
-     * @param title the title to search for
-     * @return list of books with a title containing the given text
-     */
-    List<Book> findByTitleContainingIgnoreCase(String title);
-    
-    /**
-     * Find books by status.
-     * 
-     * @param status the status to search for
-     * @return list of books with the given status
-     */
-    List<Book> findByStatus(BookStatus status);
-    
-    /**
-     * Find books published after a given date.
-     * 
-     * @param date the date threshold
-     * @return list of books published after the given date
-     */
-    List<Book> findByPublishedDateAfter(LocalDate date);
-    
-    /**
-     * Find available books that match a given title.
-     * 
-     * @param title the title to search for
-     * @return list of available books with a title containing the given text
-     */
-    List<Book> findByStatusAndTitleContainingIgnoreCase(BookStatus status, String title);
-    
-    /**
-     * Custom query to find books with high ratings (average rating >= 4).
-     * 
-     * @return list of books with an average rating of 4 or higher
-     */
-    @Query("SELECT b FROM Book b JOIN b.reviews r GROUP BY b.isbn HAVING AVG(r.rating) >= 4.0")
-    List<Book> findBooksWithHighRatings();
-    
-    /**
-     * Find books by ISBN or title containing the given text.
-     * 
-     * @param isbnOrTitle the text to search for in ISBN or title
-     * @return list of books matching the criteria
-     */
-    @Query("SELECT b FROM Book b WHERE b.isbn LIKE %:isbnOrTitle% OR LOWER(b.title) LIKE LOWER(CONCAT('%', :isbnOrTitle, '%'))")
-    List<Book> findByIsbnOrTitle(@Param("isbnOrTitle") String isbnOrTitle);
-    
-    /**
-     * Native SQL query to find books by author ordered by publication date.
-     * 
-     * @param author the author name to search for
-     * @return list of books by the given author, ordered by publication date (newest first)
-     */
-    @Query(value = "SELECT * FROM books WHERE LOWER(author) LIKE LOWER(CONCAT('%', :author, '%')) ORDER BY published_date DESC", 
+    @Query(value = """
+            SELECT * FROM books
+            WHERE to_tsvector('english', title) @@ to_tsquery('english', :searchTerms)
+            ORDER BY ts_rank(to_tsvector('english', title), to_tsquery('english', :searchTerms)) DESC
+            """,
            nativeQuery = true)
-    List<Book> findByAuthorOrderByPublishedDateDesc(@Param("author") String author);
+    List<Book> searchBooksByTitleWithRanking(@Param("searchTerms") String searchTerms);
+
+    /**
+     * PostgreSQL-specific: Fuzzy string matching using trigram similarity.
+     * Finds books with similar titles even with typos or slight variations.
+     * Requires the pg_trgm extension.
+     *
+     * @param title the approximate title to search for
+     * @param similarityThreshold the minimum similarity threshold (0.0-1.0)
+     * @return list of books with similar titles, ordered by similarity
+     */
+    @Query(value = """
+            SELECT * FROM books
+            WHERE similarity(title, :title) > :similarityThreshold
+            ORDER BY similarity(title, :title) DESC
+            """,
+           nativeQuery = true)
+    List<Book> findBooksByTitleFuzzy(
+            @Param("title") String title,
+            @Param("similarityThreshold") double similarityThreshold);
 }

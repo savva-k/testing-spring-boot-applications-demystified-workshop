@@ -27,7 +27,8 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/api/*").authenticated()
         .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
-        .requestMatchers(HttpMethod.DELETE, "/api/books/{isbn}").hasRole("ADMIN")
+        .requestMatchers(HttpMethod.DELETE, "/api/books/{id}").hasRole("ADMIN")
+        .requestMatchers(HttpMethod.DELETE, "/api/books/isbn/{isbn}").hasRole("ADMIN")
         .anyRequest().authenticated()
       )
       .addFilterBefore(llmBotRequestFilter, BasicAuthenticationFilter.class)

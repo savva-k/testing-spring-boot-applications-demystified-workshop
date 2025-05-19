@@ -24,11 +24,11 @@ public class BookService {
      * Create a new book from DTO
      * 
      * @param request the book creation request
-     * @return the ISBN of the created book
+     * @return the ID of the created book
      * @throws BookAlreadyExistsException if the book already exists
      */
-    public String createBook(BookCreationRequest request) {
-        if (bookRepository.existsById(request.isbn())) {
+    public Long createBook(BookCreationRequest request) {
+        if (bookRepository.findByIsbn(request.isbn()).isPresent()) {
             throw new BookAlreadyExistsException(request.isbn());
         }
         
@@ -40,7 +40,7 @@ public class BookService {
         );
         
         Book savedBook = bookRepository.save(book);
-        return savedBook.getIsbn();
+        return savedBook.getId();
     }
     
     /**
@@ -53,41 +53,84 @@ public class BookService {
     }
     
     /**
+     * Get a book by ID
+     * 
+     * @param id the ID of the book
+     * @return the book, if found
+     */
+    public Optional<Book> getBookById(Long id) {
+        return bookRepository.findById(id);
+    }
+    
+    /**
      * Get a book by ISBN
      * 
      * @param isbn the ISBN of the book
      * @return the book, if found
      */
     public Optional<Book> getBookByIsbn(String isbn) {
-        return bookRepository.findById(isbn);
+        return bookRepository.findByIsbn(isbn);
     }
     
     /**
      * Update a book using a DTO
      * 
-     * @param isbn the ISBN of the book to update
+     * @param id the ID of the book to update
      * @param request the update request with new book details
      * @return the updated book if found, or empty if not found
      */
-    public Optional<Book> updateBook(String isbn, BookUpdateRequest request) {
-        return bookRepository.findById(isbn)
+    public Optional<Book> updateBook(Long id, BookUpdateRequest request) {
+        return bookRepository.findById(id)
                 .map(book -> {
-                    book.setTitle(request.getTitle());
-                    book.setAuthor(request.getAuthor());
-                    book.setPublishedDate(request.getPublishedDate());
-                    book.setStatus(request.getStatus());
+                    book.setTitle(request.title());
+                    book.setAuthor(request.author());
+                    book.setPublishedDate(request.publishedDate());
+                    book.setStatus(request.status());
                     return bookRepository.save(book);
                 });
     }
     
     /**
-     * Delete a book
+     * Update a book by ISBN using a DTO
+     * 
+     * @param isbn the ISBN of the book to update
+     * @param request the update request with new book details
+     * @return the updated book if found, or empty if not found
+     */
+    public Optional<Book> updateBookByIsbn(String isbn, BookUpdateRequest request) {
+        return bookRepository.findByIsbn(isbn)
+                .map(book -> {
+                    book.setTitle(request.title());
+                    book.setAuthor(request.author());
+                    book.setPublishedDate(request.publishedDate());
+                    book.setStatus(request.status());
+                    return bookRepository.save(book);
+                });
+    }
+    
+    /**
+     * Delete a book by ID
+     * 
+     * @param id the ID of the book to delete
+     * @return true if book was deleted, false if book was not found
+     */
+    public boolean deleteBook(Long id) {
+        return bookRepository.findById(id)
+                .map(book -> {
+                    bookRepository.delete(book);
+                    return true;
+                })
+                .orElse(false);
+    }
+    
+    /**
+     * Delete a book by ISBN
      * 
      * @param isbn the ISBN of the book to delete
      * @return true if book was deleted, false if book was not found
      */
-    public boolean deleteBook(String isbn) {
-        return bookRepository.findById(isbn)
+    public boolean deleteBookByIsbn(String isbn) {
+        return bookRepository.findByIsbn(isbn)
                 .map(book -> {
                     bookRepository.delete(book);
                     return true;
