@@ -1,10 +1,12 @@
 package pragmatech.digital.workshops.lab2.experiment;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * It also showcases the limitations when using PostgreSQL-specific features.
  */
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookRepositoryInMemoryTest {
 
     private static final Logger log =
@@ -37,6 +40,12 @@ class BookRepositoryInMemoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+      System.out.println("### Books in the database ###");
+      System.out.println(bookRepository.findAll().size());
+    }
 
     @Test
     void shouldSaveAndRetrieveBook() {
@@ -112,7 +121,7 @@ class BookRepositoryInMemoryTest {
 //        log.info("Running tests with: {}", dbInfo);
 
         // Verify we're using PostgreSQL mode
-        String mode = jdbcTemplate.queryForObject("SELECT MODE()", String.class);
+        String mode = jdbcTemplate.queryForObject("SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'", String.class);
 
         assertEquals("PostgreSQL", mode, "H2 should be running in PostgreSQL mode");
     }

@@ -1,9 +1,9 @@
 spring:
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
+  datasource:
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     open-in-view: false
   application:
     name: lab-2
