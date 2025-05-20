@@ -70,7 +70,6 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 - Enjoys writing tests 🧪
 - @rieckpil on various platforms
 
-
 ---
 
 ## Getting to Know Each Other
@@ -101,6 +100,11 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 Notes:
 
 - Raise hands if you enjoy writing tests -> I do and hope I can change that for some of you today
+- Why do we Test Code?
+- Why is testing an afterthought?
+- How to make testing more joyful?
+
+
 -->
 
 ![bg left](assets/generated/starting.jpg)
