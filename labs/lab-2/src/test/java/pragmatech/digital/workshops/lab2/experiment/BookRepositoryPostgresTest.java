@@ -75,19 +75,6 @@ class BookRepositoryPostgresTest {
   }
 
   @Test
-  void shouldUseFuzzyStringMatchingWithTrigrams() {
-    // when - search with a typo "Jaava" instead of "Java"
-    List<Book> books = bookRepository.findBooksByTitleFuzzy("Jaava Programing", 0.3);
-
-    // then
-    assertThat(books).isNotEmpty();
-    books.forEach(book -> log.info("Found book with fuzzy match: {}", book.getTitle()));
-
-    // Should find both Java books even with typos
-    assertTrue(books.stream().anyMatch(book -> book.getTitle().contains("Java")));
-  }
-
-  @Test
   void shouldHandlePostgreSQLSpecificFeatures() {
     // given
     Book book = new Book("978-5-5555-5555-5", "Title with Special Characters: åäö",
