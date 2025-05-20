@@ -9,31 +9,29 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
-
 @Configuration
 public class RestClientConfig {
 
-    @Bean
-    public WebClient openLibraryWebClient(
-            @Value("${book.metadata.api.url:https://openlibrary.org}") String baseUrl,
-            @Value("${book.metadata.api.timeout:5}") int timeoutSeconds) {
-        
-        return WebClient.builder()
-                .baseUrl(baseUrl)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.USER_AGENT, "Testing Spring Boot Workshop Library App (workshop@pragmatech.io)")
-                .filter(logRequest())
-                .codecs(configurer -> configurer
-                        .defaultCodecs()
-                        .maxInMemorySize(16 * 1024 * 1024)) // 16MB buffer for larger responses
-                .build();
-    }
-    
-    private ExchangeFilterFunction logRequest() {
-        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            System.out.println("Request: " + clientRequest.method() + " " + clientRequest.url());
-            return Mono.just(clientRequest);
-        });
-    }
+  @Bean
+  public WebClient openLibraryWebClient(
+    @Value("${book.metadata.api.url:https://openlibrary.org}") String baseUrl,
+    @Value("${book.metadata.api.timeout:5}") int timeoutSeconds) {
+
+    return WebClient.builder()
+      .baseUrl(baseUrl)
+      .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+      .defaultHeader(HttpHeaders.USER_AGENT, "SPRNG-IO")
+      .filter(logRequest())
+      .codecs(configurer -> configurer
+        .defaultCodecs()
+        .maxInMemorySize(16 * 1024 * 1024)) // 16MB buffer for larger responses
+      .build();
+  }
+
+  private ExchangeFilterFunction logRequest() {
+    return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+      System.out.println("Request: " + clientRequest.method() + " " + clientRequest.url());
+      return Mono.just(clientRequest);
+    });
+  }
 }

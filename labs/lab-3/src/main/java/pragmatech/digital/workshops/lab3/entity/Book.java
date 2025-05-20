@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,6 +22,10 @@ import java.util.List;
 public class Book {
   
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  
+  @Column(nullable = false, unique = true)
   private String isbn;
   
   @Column(nullable = false)
@@ -28,7 +34,7 @@ public class Book {
   @Column(nullable = false)
   private String author;
   
-  @Column(name = "published_date", nullable = false)
+  @Column(nullable = false)
   private LocalDate publishedDate;
   
   @Column
@@ -59,19 +65,22 @@ public class Book {
   @OneToMany(mappedBy = "book")
   private List<BookReview> reviews = new ArrayList<>();
   
-  // Default constructor required by JPA
-  public Book() {
+  // Default constructor for JPA
+  protected Book() {
   }
   
-  // Constructor with required fields
   public Book(String isbn, String title, String author, LocalDate publishedDate) {
     this.isbn = isbn;
     this.title = title;
     this.author = author;
     this.publishedDate = publishedDate;
+    this.status = BookStatus.AVAILABLE;
   }
   
-  // Getters and setters
+  public Long getId() {
+    return id;
+  }
+  
   public String getIsbn() {
     return isbn;
   }
@@ -110,6 +119,10 @@ public class Book {
   
   public void setStatus(BookStatus status) {
     this.status = status;
+  }
+  
+  public boolean isAvailable() {
+    return status == BookStatus.AVAILABLE;
   }
   
   public List<BookLoan> getLoans() {
@@ -178,15 +191,34 @@ public class Book {
   
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
     Book book = (Book) o;
+    if (id != null) {
+      return id.equals(book.id);
+    }
     return isbn.equals(book.isbn);
   }
-  
+
   @Override
   public int hashCode() {
-    return isbn.hashCode();
+    return id != null ? id.hashCode() : isbn.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "Book{" +
+      "id=" + id +
+      ", isbn='" + isbn + '\'' +
+      ", title='" + title + '\'' +
+      ", author='" + author + '\'' +
+      ", publishedDate=" + publishedDate +
+      ", status=" + status +
+      '}';
   }
 }

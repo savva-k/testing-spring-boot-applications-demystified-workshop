@@ -40,7 +40,7 @@ public class Lab3Application {
                     System.out.println("Publish Date: " + metadata.publishDate());
                     
                     // For the first book (Clean Code), enrich and save to database if it doesn't exist
-                    if (isbn.equals("9780132350884") && !bookRepository.existsById(isbn)) {
+                    if (isbn.equals("9780132350884") && !bookRepository.existsByIsbn(isbn)) {
                         Book book = new Book();
                         book.setIsbn(isbn);
                         Book enrichedBook = bookMetadataService.enrichBookWithMetadata(book);

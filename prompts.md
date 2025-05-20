@@ -1,16 +1,19 @@
 # Prompts
 
+## Lab 1
+
 ## Lab 2
 
 - [X] inside the pragmatech.digitial.workshops.lab2.experiment controller add two tests: BookControllerUnit tests, trying to show what could be tested with a plain unit test using only mockito and Junit, next create in the same package a test called BookControllerTest to showcase the usage of @WebMvcTest and MockMvc to better test with HTTP semantics: proper JSON send, ensure sent data is validated, mapping of custom exceptions, authorization and authentication rules are met. Next, in the same package, add a @WebMvcTest for the LlmBotRequestFilter to demo how a filter can be better tested with MockMvc, also make sure of the new MockMvcTester
 - [X] create an SVG in slides/assets to explain Hibernate/JPA with its entity manager first/second level cache, flushing to the database to understand your inserts are not directly written, it's a write-behind cache with dirty checking
-- [ ] Exercises
+- [ ] Add Exercises
 
 ## Lab 3
 
 - [ ] Take over the entire code base (not the test code) at the state of labs/lab-2 to have a consistent ongoing code base. In lab-3 we will evolve it a bit.
 
 - [ ] In labs/lab-3, Develop a HTTP client with Spring's new RestCLient to fetch metadata about a book from a remote API. Next, develop a HTTP client test for it using WireMock and real stubbed JSON responses. Furthermore, add a sample HTTP call to this client that gets called during application startup to later on show the usage of ContextInitializers for stubbing.
+- 
 - [ ] In pragmatech.digitial.workshops.lab3.experiment add a test to showcase the difference of MockMvc and TestRestTemplate when it comes to thread context, data access and rollback
 
 - [X] Please create an SVG graphic to explain the usage of WireMock as a replacement of a real remote HTTP system for testing purposes
@@ -19,9 +22,14 @@
 
 ## Lab 4
 
+- [ ] Take over the entire code base (not the test code) at the state of labs/lab-3 to have a consistent ongoing code base. In lab-4 we will evolve it a bit.
+
 - [ ] In the pragmatech.digitial.workshops.lab3.experiment folder, create three test classes to help the audience understand the difference between @Mock, @MockBean and @MockitoBean
+
 - [ ] In the pragmatech.digitial.workshops.lab3.experiment folder, create two test classes to showcase the different API/imports between JUnit 4 and 5
+
 - [ ] In the pragmatech.digitial.workshops.lab3.experiment folder, add a sample bad Unit test in our book domain to showcase mutation testing, also include the relevant PIT config for it
+
 - [ ] in lab4, configure the failsafe and surefire with different JUnit jupiter parallelization configs and use the forkMode for junit, add some sample tests in a pragmatech.digitial.workshops.lab3.parallel folder (normal unittest and integration test) with some logging to see on which JVM and which thread they run -> help me educate about test parallelization
 
 ## Houskeeping

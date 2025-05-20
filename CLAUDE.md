@@ -39,6 +39,10 @@ Once the tests are complete and you are satisfied with their coverage, commit on
 
 **Your goal:** Incrementally build and verify code by iterating between writing tests and writing implementation, ensuring each change is easily verifiable and traceable.
 
+## Spring Boot Conventions
+
+- Favor `.yml` over `.properties` configuration files
+
 ## Test Code
 
 When writing test code, please follow these guidelines:
