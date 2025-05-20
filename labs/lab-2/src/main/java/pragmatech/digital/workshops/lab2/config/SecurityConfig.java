@@ -26,10 +26,8 @@ public class SecurityConfig {
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/books/{id}").hasRole("USER")
         .requestMatchers(HttpMethod.DELETE, "/api/books/{id}").hasRole("ADMIN")
-        .requestMatchers(HttpMethod.DELETE, "/api/books/isbn/{isbn}").hasRole("ADMIN")
-        .requestMatchers("/h2-console").permitAll()
-        .requestMatchers("/h2-console/*").permitAll()
         .anyRequest().authenticated()
       )
       .httpBasic(Customizer.withDefaults());
