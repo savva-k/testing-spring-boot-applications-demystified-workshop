@@ -17,6 +17,7 @@
 - Test context caching is critical for fast Spring Boot tests
 - Try to reuse test contexts whenever possible
 - Consider using test slices to reduce context startup time
+- Run mutation tests with `./mvnw test-compile org.pitest:pitest-maven:mutationCoverage`
 
 ## Exercises
 

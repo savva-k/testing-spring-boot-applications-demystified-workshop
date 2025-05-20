@@ -139,11 +139,11 @@
           <!-- Target classes to mutate -->
           <targetClasses>
             <!-- Focused on our mutation testing demo -->
-            <param>pragmatech.digital.workshops.lab4.experiment.MutationTestingDemoTest</param>
+            <param>pragmatech.digital.workshops.lab4.service.DiscountService</param>
           </targetClasses>
           <!-- Tests to run against the mutations -->
           <targetTests>
-            <param>pragmatech.digital.workshops.lab4.experiment.MutationTestingDemoTest</param>
+            <param>pragmatech.digital.workshops.lab4.experiment.DiscountServiceTest</param>
           </targetTests>
           <!-- Mutation operators to use -->
           <mutators>
