@@ -11,6 +11,10 @@ git config --global core.autocrlf input
 echo "Installing additional dependencies..."
 sudo apt-get update
 
+echo "Pulling Docker images for testing..."
+docker pull postgres:16-alpine
+docker pull testcontainers/ryuk:0.11.0
+
 # Add execution permission to Maven wrapper
 echo "Making Maven wrapper executable..."
 chmod +x ./mvnw

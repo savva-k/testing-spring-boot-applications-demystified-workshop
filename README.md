@@ -39,6 +39,7 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
 - [ ] Workshop infos, links for attendees on my company website
 - [ ] Prepare template for the certificate of completion
 - [ ] Show IDEA shortcut for fast test run
+- [ ] Optimize code and remove imports
 
 ## Workshop Slots
 
