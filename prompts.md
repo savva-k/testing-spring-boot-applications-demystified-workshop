@@ -2,6 +2,10 @@
 
 ## Lab 1
 
+- in labs/lab-1, create two exercises in src/test/java and pragmatech.digitial.workshops.lab1.exercises called Exercise1UnitTest: Write two tests for the book service using Mockito to test when an existing book tries to get re-added resulting in the excpetion (use JUnit's assertThrows here) and one for the happy path, next add Exercise2JUnitExtensionTest where the student has to develop a custom JUnit jupiter extension where the extensions prints only to the console if the test took longer than 100ms to quickly catch slow tests, optional give the extension a paramrter to configure the ms threshold from the outside, explore the different ways to activate the extension
+
+For all two exercise classes, add the solutions inside pragmatech.digitial.workshops.lab1.solutions called Solution1UnitTest and Solution2JUnitExtensionTest
+
 ## Lab 2
 
 - [X] inside the pragmatech.digitial.workshops.lab2.experiment controller add two tests: BookControllerUnit tests, trying to show what could be tested with a plain unit test using only mockito and Junit, next create in the same package a test called BookControllerTest to showcase the usage of @WebMvcTest and MockMvc to better test with HTTP semantics: proper JSON send, ensure sent data is validated, mapping of custom exceptions, authorization and authentication rules are met. Next, in the same package, add a @WebMvcTest for the LlmBotRequestFilter to demo how a filter can be better tested with MockMvc, also make sure of the new MockMvcTester

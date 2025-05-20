@@ -8,11 +8,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-/**
- * AssertJ Workshop Solution
- *
- * This class contains the solutions for the AssertJ exercises.
- */
+
 class Solution3AssertJTest {
 
   @Test
