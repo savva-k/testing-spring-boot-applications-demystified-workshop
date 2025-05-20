@@ -1,0 +1,11 @@
+{
+  "redhat.telemetry.enabled": false,
+  "java.help.firstView": "none",
+  "java.silentNotification": true,
+  "java.compile.nullAnalysis.mode": "automatic",
+  "workbench.colorTheme": "Visual Studio Light",
+  "editor.fontSize": 16,
+  "terminal.integrated.fontSize": 14,
+  "debug.console.fontSize": 14,
+  "markdown.preview.fontSize": 14
+}

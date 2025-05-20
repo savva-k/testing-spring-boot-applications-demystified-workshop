@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create the generated directory if it doesn't exist
-mkdir -p diagrams/generated
+mkdir -p generated
 
 # Install mermaid-cli if not already installed
 if ! command -v mmdc &> /dev/null; then
@@ -10,13 +10,13 @@ if ! command -v mmdc &> /dev/null; then
 fi
 
 # Process each Mermaid file
-for mermaid_file in diagrams/*.mmd; do
+for mermaid_file in *.mmd; do
     # Extract the filename without path and extension
     filename=$(basename "$mermaid_file" .mmd)
-    output_file="diagrams/generated/${filename}.png"
-    
+    output_file="generated/${filename}.png"
+
     echo "Rendering $mermaid_file to $output_file..."
     mmdc -i "$mermaid_file" -o "$output_file" -b transparent
 done
 
-echo "All Mermaid diagrams have been rendered to the diagrams/generated directory."
+echo "All Mermaid diagrams have been rendered to the generated directory."
