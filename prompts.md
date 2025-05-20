@@ -13,6 +13,9 @@ For all two exercise classes, add the solutions inside pragmatech.digitial.works
 
 - [ ] Add Exercises: Play with MockMvc, test a protected endpoint, test the native query with a data preparation of your choice
 
+in labs/lab-2, create two exercises in src/test/java and pragmatech.digitial.workshops.lab2.exercises called Exercise1WebMvcTest: Write two MockMvc tests to verify that only admins can delete books, create a MockMvc POST to send JSON data to verify the books are created successfully, next add Exercise2DataJpaTest where the student has test the native query of the BookRepository and use Testcontainers, also ensuring no data exists after the tests 
+For all two exercise classes, add the solutions inside pragmatech.digitial.workshops.lab2.solutions called Solution1WebMvcTest and Solution2DataJpaTest
+
 ## Lab 3
 
 - [X] Take over the entire code base (not the test code) at the state of labs/lab-2 to have a consistent ongoing code base. In lab-3 we will evolve it a bit.

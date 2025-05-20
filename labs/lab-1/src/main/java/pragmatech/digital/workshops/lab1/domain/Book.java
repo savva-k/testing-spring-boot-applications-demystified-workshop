@@ -8,11 +8,15 @@ import java.time.LocalDate;
 public class Book {
 
   private Long id;
-  private final String isbn;
+  private String isbn;
   private String title;
   private String author;
   private LocalDate publishedDate;
   private BookStatus status;
+
+  public Book(Long id) {
+    this.id = id;
+  }
 
   public Book(String isbn, String title, String author, LocalDate publishedDate) {
     if (isbn == null || isbn.isBlank()) {

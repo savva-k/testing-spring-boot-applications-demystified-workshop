@@ -1,17 +1,18 @@
 package pragmatech.digital.workshops.lab1.experiment;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pragmatech.digital.workshops.lab1.domain.Book;
+import pragmatech.digital.workshops.lab1.repository.BookRepository;
 import pragmatech.digital.workshops.lab1.service.BookService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,20 +20,22 @@ import static org.mockito.Mockito.when;
 class MockitoDemoTest {
 
   @Mock
+  private BookRepository bookRepository;
+
+  @InjectMocks
   private BookService bookService;
 
   @Test
   void shouldReturnBookWhenFound() {
     // Arrange
-    Book expectedTestBook = new Book("1234", "Test Book", "Author", LocalDate.now());
-    when(bookService.findByIsbn("1234")).thenReturn(Optional.of(expectedTestBook));
+    when(bookRepository.findByIsbn("1234")).thenReturn(Optional.empty());
+    when(bookRepository.save(any())).thenReturn(new Book(1L));
 
     // Act
-    Optional<Book> result = bookService.findByIsbn("1234");
+    Long id = bookService.create("1234", "Test Book", "Author");
 
     // Assert
-    assertTrue(result.isPresent());
-    assertEquals(expectedTestBook, result.get());
-    verify(bookService).findByIsbn("1234");
+    assertEquals(1L, id);
+    verify(bookRepository).findByIsbn("1234");
   }
 }
