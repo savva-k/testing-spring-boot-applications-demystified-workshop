@@ -54,7 +54,7 @@ public class Book {
   private BookStatus status = BookStatus.AVAILABLE;
 
   // Default constructor for JPA
-  protected Book() {
+  public Book() {
   }
 
   public Book(String isbn, String title, String author, LocalDate publishedDate) {

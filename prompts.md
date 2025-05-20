@@ -12,9 +12,9 @@
 
 - [ ] Take over the entire code base (not the test code) at the state of labs/lab-2 to have a consistent ongoing code base. In lab-3 we will evolve it a bit.
 
-- [ ] In labs/lab-3, Develop a HTTP client with Spring's new RestCLient to fetch metadata about a book from a remote API. Next, develop a HTTP client test for it using WireMock and real stubbed JSON responses. Furthermore, add a sample HTTP call to this client that gets called during application startup to later on show the usage of ContextInitializers for stubbing.
-- 
-- [ ] In pragmatech.digitial.workshops.lab3.experiment add a test to showcase the difference of MockMvc and TestRestTemplate when it comes to thread context, data access and rollback
+- [X] In labs/lab-3, Develop a HTTP client with Spring's new RestCLient to fetch metadata about a book from a remote API. Next, develop a HTTP client test for it using WireMock and real stubbed JSON responses. Furthermore, add a sample HTTP call to this client that gets called during application startup to later on show the usage of ContextInitializers for stubbing.
+
+- [ ] In pragmatech.digitial.workshops.lab3.experiment add a test to showcase the difference of MockMvc and WebTestClient when it comes to thread context, data access and rollback
 
 - [X] Please create an SVG graphic to explain the usage of WireMock as a replacement of a real remote HTTP system for testing purposes
 

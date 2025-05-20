@@ -2,13 +2,17 @@ package pragmatech.digital.workshops.lab3.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pragmatech.digital.workshops.lab3.dto.BookCreationRequest;
 import pragmatech.digital.workshops.lab3.dto.BookUpdateRequest;
 import pragmatech.digital.workshops.lab3.entity.Book;
+import pragmatech.digital.workshops.lab3.entity.BookStatus;
+import pragmatech.digital.workshops.lab3.repository.BookRepository;
 import pragmatech.digital.workshops.lab3.service.BookService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -16,9 +20,11 @@ import java.util.List;
 public class BookController {
 
   private final BookService bookService;
+  private final BookRepository bookRepository;
 
-  public BookController(BookService bookService) {
+  public BookController(BookService bookService, BookRepository bookRepository) {
     this.bookService = bookService;
+    this.bookRepository = bookRepository;
   }
 
   @GetMapping
@@ -81,5 +87,32 @@ public class BookController {
     return bookService.deleteBookByIsbn(isbn)
       ? ResponseEntity.noContent().build()
       : ResponseEntity.notFound().build();
+  }
+  
+  // Test endpoints for demonstrating MockMvc vs WebTestClient differences
+  
+  @GetMapping("/thread-id")
+  public String getThreadId() {
+    return String.valueOf(Thread.currentThread().getId());
+  }
+  
+  @GetMapping("/data-access/{isbn}")
+  public ResponseEntity<Book> getBookForDataAccessTest(@PathVariable String isbn) {
+    return bookRepository.findByIsbn(isbn)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+  }
+  
+  @GetMapping("/create-for-test/{isbn}/{title}")
+  @Transactional
+  public ResponseEntity<Book> createBookForTest(@PathVariable String isbn, @PathVariable String title) {
+    Book book = new Book();
+    book.setIsbn(isbn);
+    book.setTitle(title);
+    book.setAuthor("Test Author");
+    book.setPublishedDate(LocalDate.now());
+    book.setStatus(BookStatus.AVAILABLE);
+    Book savedBook = bookRepository.save(book);
+    return ResponseEntity.ok(savedBook);
   }
 }
