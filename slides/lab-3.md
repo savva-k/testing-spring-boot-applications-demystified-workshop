@@ -199,7 +199,7 @@ This goes into the cache key (`MergedContextConfiguration`):
 Common problems that break caching:
 
 1. Different context configurations
-2. @DirtiesContext usage
+2. `@DirtiesContext` usage
 3. Modifying beans in tests
 4. Different property settings
 5. Different active profiles
@@ -213,17 +213,6 @@ Common problems that break caching:
 - Understand how the cache key is built
 - Monitor and investigate the context restarts
 - Align the number of unique context configurations for your test suite
-
----
-
-# External Dependencies in Tests
-
-- Need real databases, message brokers, services
-- Cannot use in-memory alternatives for everything
-- Must be repeatable and isolated
-- Should be fast and reliable
-
-Enter: **Testcontainers**
 
 ---
 
