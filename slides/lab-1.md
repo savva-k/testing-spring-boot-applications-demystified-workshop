@@ -29,7 +29,6 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 <!--
 
 - Welcome, Introduction
-  - 
 - Overview of the workshop  
 - When to eat, toilet, WLAN
 
@@ -40,8 +39,8 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 # Organization
 
-- Hotel WiFi: Spring I/O Password: `bootifulBCN`
-- Slides & Code will be shared
+- Hotel WiFi: `Spring I/O` Password: `bootifulBCN`
+- Slides & Code will be shared: check PragmaTech GitHub
 - Workshop lab requirements
   - Java 21
   - Docker
@@ -321,9 +320,6 @@ class BookServiceTest {
 
 ---
 
-- Strict Stubbing (TODO)
-
----
 
 ## Transitive Test Dependency: AssertJ
 
@@ -603,8 +599,8 @@ void testBookService() {
 ## JUnit Jupiter Extension API
 
 - Important concept to understand
-- Makes JUnit 5 extensible
-- Spring integration, later `SpringExtension`
+- Makes JUnit Jupiter extensible
+- `SpringExtension` provides Spring integration
 - Successor of JUnit 4's `@RunWith`/`@Rule` API
 
 
@@ -617,12 +613,21 @@ class BookServiceTest {
 
 ---
 
+## JUnit Jupiter Extension Points
 
-Create a custom extension for timing tests:
+- Lifecycle Callbacks: `BeforeEachCallback`, `AfterAllCallback`, etc.
+- Parameter Resolution: `ParameterResolver`
+- Exception Handling: `TestExecutionExceptionHandler`
+- Conditional Test Execution: `ExecutionCondition`
+- Test Instance Factories: `TestInstanceFactory`, `TestInstancePostProcessor`
+
+---
+
+## Create a Custom Extension
 
 ```java
-public class TimingExtension implements BeforeTestExecutionCallback, 
-                                      AfterTestExecutionCallback {
+public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+  
     private static final Logger logger = LoggerFactory.getLogger(TimingExtension.class);
     
     @Override
@@ -648,11 +653,9 @@ public class TimingExtension implements BeforeTestExecutionCallback,
 # Time For Some Exercises
 ## Lab 1
 
-- Set up the repository locally
-- GitHub Codespaces (120 hours for personal accounts free per month)
-- Pick at least 4-Cores (16 GB RAM), region `Europe West`
-- Keylayout
-- Navigate to the `lab-1` folder in the repository 
-- Complete the tasks as described in the `README` file of that folder 
-- Time box ~ 15 - 20 minutes (and optionally the coffee break)
-- We'll discuss the solutions at the beginning of the next lab
+- Set up the [repository](https://github.com/PragmaTech-GmbH/testing-spring-boot-applications-demystified-workshop) locally - https://github.com/PragmaTech-GmbH/testing-spring-boot-applications-demystified-workshop
+- Search "PragmaTech GitHub" and pick the first pinned repository
+- Work locally or use GitHub Codespaces (120 hours/month free)
+- Fore Codespaces, pick at least 4-Cores (16 GB RAM) and region `Europe West`
+- Navigate to the `labs/lab-1` folder in the repository and complete the tasks as described in the `README` file of that folder 
+- Time boxed until the end of the coffee break (11:05 AM)

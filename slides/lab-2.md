@@ -3,6 +3,13 @@ marp: true
 theme: pragmatech
 ---
 
+<style>
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
 ![bg](./assets/barcelona-spring-io.jpg)
 
 ---
@@ -20,6 +27,9 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 
 --- 
+
+<!-- header: 'Testing Spring Boot Applications Demystified Workshop @ Spring I/O 21.05.2025' -->
+<!-- footer: '![w:32 h:32](assets/generated/logo.webp)' -->
 
 ![bg left:33%](assets/generated/lab-2.jpg)
 
@@ -45,28 +55,71 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 ---
 
-- Provide a unit test to show limits of unit testing for controllers
+## Unit Testing a Controller
+
+```java
+@ExtendWith(MockitoExtension.class)
+class BookControllerUnitTest {
+
+  @Mock
+  private BookService bookService;
+
+  @InjectMocks
+  private BookController bookController;
+
+  // ...
+}
+```
 
 ---
 
 <!-- _class: section -->
 
-# SECTION 2
-# Sliced Testing
+# A Better Alternative
+## Sliced Testing
+
+![bg right:33%](assets/generated/slice.jpg)
 
 ---
 
-# Sliced Testing in Spring Boot
+## A Typical Spring Application Context
 
-- Test a specific "slice" of the application
-- Focus on one layer at a time
-- Faster than full application tests
-- Clearer test boundaries
-- Simplified configuration
+![w:600 center](assets/generated/spring-context.png)
 
 ---
 
-# Common Test Slices
+![w:700 center](assets/generated/spring-sliced-context.png)
+
+---
+
+## Slicing Example: @WebMvcTest
+
+- Testing your web layer in isolation and only load the beans you need
+- `MockMvc`: Mocked servlet environment with HTTP semantics
+
+```java
+@WebMvcTest(BookController.class)
+@Import(SecurityConfig.class)
+class BookControllerTest {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockitoBean
+  private BookService bookService;
+
+}
+```
+
+- See `WebMvcTypeExcludeFilter` for included Spring beans
+
+---
+
+![center](assets/generated/slicing-annotations.png)
+
+---
+
+## Common Test Slices
 
 - `@WebMvcTest` - Controller layer
 - `@DataJpaTest` - Repository layer
@@ -77,128 +130,12 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 ---
 
-# When Unit Tests Are Not Enough
-
-- HTTP constraints and semantics
-- Security rules and authentication
-- Request/response processing
-- Data persistence behavior
-- Transaction boundaries
-
----
-
-<!-- _class: code -->
-
-# @WebMvcTest
-
-```java
-@WebMvcTest(BookController.class)
-class BookControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private BookService bookService;
-}
-```
-
-- Tests only the web layer
-- Auto-configures MockMvc
-- Lightweight context with web components
-- No full application context
-
----
-
-<!-- _class: code -->
-
-# HTTP Semantics with MockMvc
-
-```java
-@Test
-void getBookByIsbnReturnsBookWhenFound() throws Exception {
-    Book book = new Book("978-1-2345-6789-0", "Spring Boot Testing", "John Doe");
-    when(bookService.findByIsbn("978-1-2345-6789-0")).thenReturn(Optional.of(book));
-    
-    mockMvc.perform(get("/api/books/978-1-2345-6789-0"))
-           .andExpect(status().isOk())
-           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-           .andExpect(jsonPath("$.isbn", is("978-1-2345-6789-0")))
-           .andExpect(jsonPath("$.title", is("Spring Boot Testing")));
-}
-```
-
----
-
-# Testing HTTP Status Codes
-
-```java
-@Test
-void getBookByIsbnReturnsNotFoundWhenMissing() throws Exception {
-    when(bookService.findByIsbn("unknown")).thenReturn(Optional.empty());
-    
-    mockMvc.perform(get("/api/books/unknown"))
-           .andExpect(status().isNotFound());
-}
-```
-
----
-
-# Testing Request Filters
-
-```java
-@WebMvcTest({BookController.class, RequestLoggingFilter.class})
-class FilterTest {
-    @Test
-    void filterShouldProcessRequest() throws Exception {
-        mockMvc.perform(get("/api/books")
-               .header("User-Agent", "Test"))
-               .andExpect(status().isOk());
-               
-        // Verify filter behavior
-    }
-}
-```
-
----
-
-# Testing Spring Security
-
-```java
-@Test
-@WithMockUser(roles = "ADMIN")
-void createBookRequiresAdminRole() throws Exception {
-    mockMvc.perform(post("/api/books")
-           .contentType(MediaType.APPLICATION_JSON)
-           .content("{\"isbn\":\"123\",\"title\":\"Test\"}"))
-           .andExpect(status().isCreated());
-}
-
-@Test
-void createBookWithoutAuthReturns401() throws Exception {
-    mockMvc.perform(post("/api/books")
-           .contentType(MediaType.APPLICATION_JSON)
-           .content("{\"isbn\":\"123\",\"title\":\"Test\"}"))
-           .andExpect(status().isUnauthorized());
-}
-```
-
----
-
-# Exercise: Testing a Filter and Secured Endpoints
-
-1. Test a request logging filter
-2. Test secured endpoints with different authentication scenarios
-3. Verify correct HTTP status codes for various security conditions
-
----
-
-<!-- _class: code -->
-
-# @DataJpaTest
+## Introducing: @DataJpaTest
 
 ```java
 @DataJpaTest
 class BookRepositoryTest {
+  
     @Autowired
     private TestEntityManager entityManager;
     
@@ -209,127 +146,81 @@ class BookRepositoryTest {
 
 - Tests JPA repositories
 - Auto-configures in-memory database
-- Sets up appropriate transaction mgmt
-- Provides TestEntityManager
+- Provides `TestEntityManager`
+- Verify JPA entity mapping, creation and native queries
 
 ---
 
-# EntityManager vs. Repository
+## In-Memory vs. Real Database
+
+- By default, Spring Boot tries to autoconfigure an in-memory relational database (H2 or Derby)
+- In-memory database pros:
+  - Easy to use & fast
+  - Less overhead
+- In-memory database cons:
+  - Mismatch with the infrastructure setup in production
+  - Despite having compatibility modes, we can't fully test proprietary database features
+
+---
+
+<!--
+
+Notes:
+
+- who is not using Testcontainers
+- explain basics
+
+-->
+
+## Solution: Docker & Testcontainers
+
+![bg right:33%](assets/generated/containers.jpg)
+
+---
+
+## Using a Real Database
 
 ```java
-@Test
-void findByTitleShouldReturnBook() {
-    // Using EntityManager to set up data
-    Book savedBook = entityManager.persistAndFlush(
-        new Book("123", "Spring Data JPA", "John Doe")
-    );
-    
-    // Using Repository for the test
-    List<Book> found = bookRepository.findByTitleContaining("Data");
-    
-    assertThat(found).hasSize(1);
-    assertThat(found.get(0).getIsbn()).isEqualTo("123");
-}
+@Container
+@ServiceConnection
+static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+  .withDatabaseName("testdb")
+  .withUsername("test")
+  .withPassword("test")
+  .withInitScript("init-postgres.sql"); // Initialize PostgreSQL with required extensions
 ```
 
 ---
 
-# Transaction Boundaries and Flushing
+![](assets/hibernate-persistence-context.svg)
+
+---
+
+## Testing Native Queries
 
 ```java
-@Test
-void saveAndFlushImmediately() {
-    Book book = new Book("123", "Test", "Author");
-    bookRepository.save(book);  // No SQL executed yet
-    
-    entityManager.flush();  // Forces SQL execution
-    entityManager.clear();  // Clears persistence context
-    
-    Book found = bookRepository.findById("123").orElse(null);
-    assertThat(found).isNotNull();
-}
+/**
+ * PostgreSQL-specific: Full text search on book titles with ranking.
+ * Uses PostgreSQL's to_tsvector and to_tsquery for sophisticated text searching
+ * with ranking based on relevance.
+ *
+ * @param searchTerms the search terms (e.g. "adventure dragons fantasy")
+ * @return list of books matching the search terms, ordered by relevance
+ */
+@Query(value = """
+  SELECT * FROM books
+  WHERE to_tsvector('english', title) @@ plainto_tsquery('english', :searchTerms)
+  ORDER BY ts_rank(to_tsvector('english', title), plainto_tsquery('english', :searchTerms)) DESC
+  """,
+  nativeQuery = true)
+List<Book> searchBooksByTitleWithRanking(@Param("searchTerms") String searchTerms);
 ```
 
 ---
 
-# When SQL Gets Executed
+# Time For Some Exercises
+## Lab 2
 
-- `save()` - No immediate SQL (only on flush)
-- `saveAndFlush()` - Executes SQL immediately
-- `findById()` - Executes SQL if entity not in context
-- Transaction completion - Triggers flush
-- `EntityManager.flush()` - Manual flush
-
----
-
-# Testing Native Queries
-
-```java
-@Query(value = "SELECT * FROM books WHERE " +
-               "LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-               "LOWER(author) LIKE LOWER(CONCAT('%', :keyword, '%'))",
-       nativeQuery = true)
-List<Book> search(String keyword);
-```
-
-How to test?
-- Ensure correct data setup
-- Verify query results with different parameters
-- Test edge cases and special characters
-
----
-
-<!-- _class: code -->
-
-# Lazy Loading
-
-```java
-@Entity
-public class Book {
-    // ...
-    
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private Set<Review> reviews;
-}
-
-@Test
-void demonstrateLazyLoading() {
-    Book book = entityManager.find(Book.class, "123");
-    
-    // reviews not loaded yet
-    assertFalse(Hibernate.isInitialized(book.getReviews()));
-    
-    // accessing the collection triggers loading
-    int reviewCount = book.getReviews().size();
-    
-    // now it's loaded
-    assertTrue(Hibernate.isInitialized(book.getReviews()));
-}
-```
-
----
-
-# Entity Lifecycle Requirements
-
-- Entities need no-arg constructor (can be protected)
-- Prefer field access or property access consistently
-- Understand cascade types
-- Use proper fetch types (LAZY vs EAGER)
-
----
-
-# Exercise: Working with JPA Tests
-
-1. Write DataJpaTest for custom repository methods
-2. Test lazy loading behavior
-3. Test entity lifecycle and transaction boundaries
-4. Write test for a native query
-
----
-
-# Lab 2: Putting It All Together
-
-- Test controllers with security constraints
-- Test repository methods with proper transaction handling
-- Understand when SQL statements are executed
-- Verify proper HTTP semantics and JPA behavior
+- Work with the same repository as in lab 1
+- Navigate to the `labs/lab-2` folder in the repository and complete the tasks as described in the `README` file of that folder
+- Time boxed until the end of the lunch break (14:00 AM)

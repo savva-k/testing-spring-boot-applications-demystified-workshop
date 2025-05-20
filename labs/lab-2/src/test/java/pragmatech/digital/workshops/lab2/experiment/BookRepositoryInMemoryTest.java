@@ -94,27 +94,7 @@ class BookRepositoryInMemoryTest {
   }
 
   @Test
-  void shouldFailWhenUsingTrigramSimilaritySearch() {
-    // given
-    Book book = new Book("978-1-1111-1111-1", "Advanced Java Programming", "Java Expert", LocalDate.of(2020, 1, 1));
-    bookRepository.save(book);
-
-    // when & then
-    Exception exception = assertThrows(Exception.class, () -> {
-      List<Book> books = bookRepository.findBooksByTitleFuzzy("Advanced Javaa", 0.7);
-      log.info("Books found: {}", books);
-    });
-
-    log.error("Expected exception when using PostgreSQL-specific features: {}", exception.getMessage());
-    assertThat(exception.getMessage()).contains("similarity");
-  }
-
-  @Test
   void shouldDemonstrateH2CompatibilityMode() {
-    // Get H2 version and PostgreSQL compatibility mode
-//        String dbInfo = jdbcTemplate.queryForObject("SELECT H2VERSION() || ' (Mode: ' || MODE() || ')'", String.class);
-//        log.info("Running tests with: {}", dbInfo);
-
     // Verify we're using PostgreSQL mode
     String mode = jdbcTemplate.queryForObject("SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'", String.class);
 

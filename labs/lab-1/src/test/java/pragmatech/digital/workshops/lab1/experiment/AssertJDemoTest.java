@@ -22,7 +22,7 @@ class AssertJDemoTest {
             .extracting(TestBook::title)
             .containsExactly("Spring Boot Testing", "Advanced Spring");
 
-        assertThat(testBooks.get(0))
+        assertThat(testBooks.getFirst())
             .extracting(TestBook::isbn, TestBook::title)
             .containsExactly("1234", "Spring Boot Testing");
     }

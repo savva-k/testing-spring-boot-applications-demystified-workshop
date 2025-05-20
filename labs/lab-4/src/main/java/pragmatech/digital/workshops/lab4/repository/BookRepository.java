@@ -19,10 +19,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
    * @return list of books matching the search terms, ordered by relevance
    */
   @Query(value = """
-            SELECT * FROM books
-            WHERE to_tsvector('english', title) @@ to_tsquery('english', :searchTerms)
-            ORDER BY ts_rank(to_tsvector('english', title), to_tsquery('english', :searchTerms)) DESC
-            """,
+    SELECT * FROM books
+    WHERE to_tsvector('english', title) @@ plainto_tsquery('english', :searchTerms)
+    ORDER BY ts_rank(to_tsvector('english', title), plainto_tsquery('english', :searchTerms)) DESC
+    """,
     nativeQuery = true)
   List<Book> searchBooksByTitleWithRanking(@Param("searchTerms") String searchTerms);
 

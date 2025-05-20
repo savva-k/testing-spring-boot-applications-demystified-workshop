@@ -318,3 +318,12 @@ Write a comprehensive test for the books API:
 - Managing test data effectively
 - Optimizing Spring Test Context caching
 - Testing HTTP APIs from the outside
+
+---
+
+# Time For Some Exercises
+## Lab 3
+
+- Work with the same repository as in lab 1/lab 2
+- Navigate to the `labs/lab-3` folder in the repository and complete the tasks as described in the `README` file of that folder
+- Time boxed until the end of the coffee break (15:50 AM)
