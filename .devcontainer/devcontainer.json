@@ -5,10 +5,9 @@
         "ghcr.io/devcontainers/features/java:1": {
             "version": "none",
             "installMaven": true,
-            "mavenVersion": "3.9.6"
+            "mavenVersion": "3.9.9"
         },
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/devcontainers-contrib/features/plantuml:1": {}
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     },
     "customizations": {
         "vscode": {
@@ -20,7 +19,6 @@
                 "pivotal.vscode-boot-dev-pack",
                 "redhat.java",
                 "redhat.vscode-xml",
-                "jebbs.plantuml",
                 "gabrielbb.vscode-lombok",
                 "ms-azuretools.vscode-docker"
             ],
@@ -37,9 +35,6 @@
                 ],
                 "java.configuration.updateBuildConfiguration": "automatic",
                 "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
-                "java.test.config": {
-                    "vmArgs": ["-Djava.security.properties=${workspaceFolder}/.devcontainer/java-security.properties"]
-                }
             }
         }
     },
