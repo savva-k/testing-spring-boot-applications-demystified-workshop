@@ -1,0 +1,45 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/isbn/9780132350884.json"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "openlibrary-book-response.json"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/isbn/0132350882.json"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "openlibrary-book-response.json"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPattern": "/isbn/(?!9780132350884|0132350882).+\\.json"
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "Book not found"
+        }
+      }
+    }
+  ]
+}

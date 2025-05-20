@@ -529,7 +529,8 @@ class CreateBookTests {
 - Advanced data creation patterns
 - BDD
 - Contract Testing
-- Reactive Testing
+- Testing for Reactive Spring Boot Applications
+- TDD
 
 
 ---

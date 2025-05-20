@@ -1,0 +1,32 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/api/books/9780321751041"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyFileName": "book-metadata-response.json"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPattern": "/api/books/(?!9780321751041).+"
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "Book not found"
+        }
+      }
+    }
+  ]
+}

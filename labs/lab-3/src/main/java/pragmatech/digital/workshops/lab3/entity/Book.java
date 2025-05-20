@@ -31,6 +31,24 @@ public class Book {
   @Column(name = "published_date", nullable = false)
   private LocalDate publishedDate;
   
+  @Column
+  private String description;
+  
+  @Column
+  private String publisher;
+  
+  @Column
+  private String language;
+  
+  @Column(name = "thumbnail_url")
+  private String thumbnailUrl;
+  
+  @Column(name = "average_rating")
+  private Double averageRating;
+  
+  @Column
+  private Integer pageCount;
+  
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private BookStatus status = BookStatus.AVAILABLE;
@@ -108,6 +126,54 @@ public class Book {
   
   public void setReviews(List<BookReview> reviews) {
     this.reviews = reviews;
+  }
+  
+  public String getDescription() {
+    return description;
+  }
+  
+  public void setDescription(String description) {
+    this.description = description;
+  }
+  
+  public String getPublisher() {
+    return publisher;
+  }
+  
+  public void setPublisher(String publisher) {
+    this.publisher = publisher;
+  }
+  
+  public String getLanguage() {
+    return language;
+  }
+  
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+  
+  public String getThumbnailUrl() {
+    return thumbnailUrl;
+  }
+  
+  public void setThumbnailUrl(String thumbnailUrl) {
+    this.thumbnailUrl = thumbnailUrl;
+  }
+  
+  public Double getAverageRating() {
+    return averageRating;
+  }
+  
+  public void setAverageRating(Double averageRating) {
+    this.averageRating = averageRating;
+  }
+  
+  public Integer getPageCount() {
+    return pageCount;
+  }
+  
+  public void setPageCount(Integer pageCount) {
+    this.pageCount = pageCount;
   }
   
   @Override
