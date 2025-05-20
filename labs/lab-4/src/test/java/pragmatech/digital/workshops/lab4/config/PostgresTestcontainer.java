@@ -18,7 +18,7 @@ public abstract class PostgresTestcontainer {
      * is started only once for all tests.
      */
     @Container
-    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:14.5")
+    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");

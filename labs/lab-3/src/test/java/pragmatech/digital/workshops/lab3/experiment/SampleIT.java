@@ -21,7 +21,7 @@ class SampleIT {
 
   @Container
   @ServiceConnection
-  static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:14.5")
+  static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine")
     .withDatabaseName("testdb")
     .withUsername("test")
     .withPassword("test");

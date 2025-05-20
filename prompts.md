@@ -21,6 +21,6 @@ For the first exercise, add a solutions inside pragmatech.digitial.workshops.lab
 
 ## Houskeeping
 
-- Create a consistent README for all labs in the root of each lab folder. Follow the same structure for each file: Learning Objectives, Hints, Exercises. For each exercise, give an introduction and tips on what they need to do and where they find the solution
+- Create a consistent README for all labs in the root of each lab folder. Follow the same structure for each file: Learning Objectives, Hints, Exercises. For each exercise, give an introduction and tips on what they need to do and where they find the solution.
 
 - Use uniquely postgres-alpine-x
