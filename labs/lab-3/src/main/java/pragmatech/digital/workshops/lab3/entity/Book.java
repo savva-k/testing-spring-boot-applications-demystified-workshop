@@ -37,17 +37,8 @@ public class Book {
   @Column
   private String description;
 
-  @Column
-  private String publisher;
-
-  @Column
-  private String language;
-
   @Column(name = "thumbnail_url")
   private String thumbnailUrl;
-
-  @Column
-  private Integer pageCount;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -121,36 +112,12 @@ public class Book {
     this.description = description;
   }
 
-  public String getPublisher() {
-    return publisher;
-  }
-
-  public void setPublisher(String publisher) {
-    this.publisher = publisher;
-  }
-
-  public String getLanguage() {
-    return language;
-  }
-
-  public void setLanguage(String language) {
-    this.language = language;
-  }
-
   public String getThumbnailUrl() {
     return thumbnailUrl;
   }
 
   public void setThumbnailUrl(String thumbnailUrl) {
     this.thumbnailUrl = thumbnailUrl;
-  }
-
-  public Integer getPageCount() {
-    return pageCount;
-  }
-
-  public void setPageCount(Integer pageCount) {
-    this.pageCount = pageCount;
   }
 
   @Override

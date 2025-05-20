@@ -1,5 +1,8 @@
 package pragmatech.digital.workshops.lab4.experiment;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,14 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pragmatech.digital.workshops.lab4.client.OpenLibraryApiClient;
+import pragmatech.digital.workshops.lab4.dto.BookCreationRequest;
 import pragmatech.digital.workshops.lab4.dto.BookMetadataResponse;
 import pragmatech.digital.workshops.lab4.entity.Book;
 import pragmatech.digital.workshops.lab4.repository.BookRepository;
-import pragmatech.digital.workshops.lab4.service.BookInfoService;
-
-import java.util.Optional;
+import pragmatech.digital.workshops.lab4.service.BookService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * This test demonstrates the usage of @Mock annotation from Mockito with JUnit 5.
- *
+ * <p>
  * Key characteristics of @Mock:
  * - A plain Mockito annotation, not Spring-specific
  * - Creates mock objects but doesn't register them in Spring context
@@ -34,64 +37,40 @@ import static org.mockito.Mockito.when;
 @DisplayName("@Mock Annotation Test")
 class MockAnnotationTest {
 
-    @Mock
-    private OpenLibraryApiClient openLibraryApiClient;
+  @Mock
+  private OpenLibraryApiClient openLibraryApiClient;
 
-    @Mock
-    private BookRepository bookRepository;
+  @Mock
+  private BookRepository bookRepository;
 
-    @InjectMocks
-    private BookInfoService bookInfoService;
+  @InjectMocks
+  private BookService bookService;
 
-    @Test
-    @DisplayName("should return book when enriching with metadata")
-    void shouldReturnBookWhenEnrichingWithMetadata() {
-        // Arrange
-        Book book = new Book();
-        book.setIsbn("1234567890");
-        book.setTitle("Original Title");
+  @Test
+  void shouldReturnBookWhenEnrichingWithMetadata() {
+    // Arrange
+    BookCreationRequest bookCreationRequest = new BookCreationRequest("1234567890", "Original Title", "Mike", LocalDate.now());
 
-        BookMetadataResponse metadata = new BookMetadataResponse(
-                "/books/123",
-                "Enriched Title",
-                null, null, null, null, null, null, null,
-                "Book description", null, null);
+    BookMetadataResponse metadata = new BookMetadataResponse(
+      "/books/123",
+      "Enriched Title",
+      null, null, null, null, null, null, null,
+      "Book description", null, null);
 
-        when(openLibraryApiClient.getBookByIsbn("1234567890")).thenReturn(metadata);
+    Book savedBook = new Book();
+    savedBook.setId(42L);
 
-        // Act
-        Book enrichedBook = bookInfoService.enrichBookWithExternalInfo(book);
+    when(openLibraryApiClient.getBookByIsbn("1234567890")).thenReturn(metadata);
+    when(bookRepository.findByIsbn(anyString())).thenReturn(Optional.empty());
+    when(bookRepository.save(any())).thenReturn(savedBook);
 
-        // Assert
-        assertThat(enrichedBook).isNotNull();
-        assertThat(enrichedBook.getTitle()).isEqualTo("Original Title"); // Title shouldn't change
-        assertThat(enrichedBook.getDescription()).isEqualTo("Book description"); // Description should be added
+    // Act
+    Long createdBookId = bookService.createBook(bookCreationRequest);
 
-        verify(openLibraryApiClient, times(1)).getBookByIsbn(anyString());
+    // Assert
+    assertThat(createdBookId).isNotNull();
 
-        // Note: bookRepository was not used, so we don't verify interactions with it
-    }
-
-    @Test
-    @DisplayName("should demonstrate setting up multiple mock behaviors")
-    void shouldDemonstrateMultipleMockBehaviors() {
-        // Arrange
-        when(bookRepository.findByIsbn("123")).thenReturn(Optional.of(new Book()));
-        when(bookRepository.findByIsbn("456")).thenReturn(Optional.empty());
-
-        // We can also set up mocks to throw exceptions
-        when(bookRepository.findByIsbn("error")).thenThrow(new RuntimeException("Simulated error"));
-
-        // Act & Assert
-        assertThat(bookRepository.findByIsbn("123")).isPresent();
-        assertThat(bookRepository.findByIsbn("456")).isEmpty();
-
-        try {
-            bookRepository.findByIsbn("error");
-            // If we reach here, the test should fail
-            assertThat(false).isTrue(); // This will always fail
-        } catch (RuntimeException e) {
-            assertThat(e.getMessage()).isEqualTo("Simulated error");
-        }
-    }
+    verify(openLibraryApiClient, times(1)).getBookByIsbn(anyString());
+    verify(bookRepository, times(1)).save(any());
+  }
 }

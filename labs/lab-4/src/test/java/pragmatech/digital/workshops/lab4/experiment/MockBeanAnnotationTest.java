@@ -1,16 +1,25 @@
 package pragmatech.digital.workshops.lab4.experiment;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import pragmatech.digital.workshops.lab4.LocalDevTestcontainerConfig;
 import pragmatech.digital.workshops.lab4.client.OpenLibraryApiClient;
+import pragmatech.digital.workshops.lab4.dto.BookCreationRequest;
 import pragmatech.digital.workshops.lab4.dto.BookMetadataResponse;
 import pragmatech.digital.workshops.lab4.entity.Book;
-import pragmatech.digital.workshops.lab4.service.BookInfoService;
+import pragmatech.digital.workshops.lab4.repository.BookRepository;
+import pragmatech.digital.workshops.lab4.service.BookService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * This test demonstrates the usage of @MockBean annotation from Spring Boot Test.
- *
+ * <p>
  * Key characteristics of @MockBean:
  * - Spring Boot Test specific annotation
  * - Creates a Mockito mock and adds it to the Spring application context
@@ -29,60 +38,45 @@ import static org.mockito.Mockito.when;
  * - When you modify mocks between tests, it triggers context reload (slower)
  */
 @SpringBootTest
+@Import(LocalDevTestcontainerConfig.class)
 @DisplayName("@MockBean Annotation Test")
 class MockBeanAnnotationTest {
 
-    @MockBean
-    private OpenLibraryApiClient openLibraryApiClient;
+  @MockitoBean
+  private OpenLibraryApiClient openLibraryApiClient;
 
-    @Autowired
-    private BookInfoService bookInfoService;
+  @MockBean
+  private BookRepository bookRepository;
 
-    @Test
-    @DisplayName("should enrich book with external info from mocked client")
-    void shouldEnrichBookWithExternalInfoFromMockedClient() {
-        // Arrange
-        Book book = new Book();
-        book.setIsbn("1234567890");
-        book.setTitle("Original Title");
+  @Autowired
+  private BookService bookService;
 
-        BookMetadataResponse metadata = new BookMetadataResponse(
-                "/books/123",
-                "Enriched Title",
-                null, null, null, null, null, null, null,
-                "Book description", null, null);
+  @Test
+  void shouldEnrichBookWithExternalInfoFromMockedClient() {
+    // Arrange
+    BookCreationRequest bookCreationRequest = new BookCreationRequest("1234567890", "Original Title", "Mike", LocalDate.now());
 
-        when(openLibraryApiClient.getBookByIsbn("1234567890")).thenReturn(metadata);
+    BookMetadataResponse metadata = new BookMetadataResponse(
+      "/books/123",
+      "Enriched Title",
+      null, null, null, null, null, null, null,
+      "Book description", null, null);
 
-        // Act
-        Book enrichedBook = bookInfoService.enrichBookWithExternalInfo(book);
+    Book savedBook = new Book();
+    savedBook.setId(42L);
 
-        // Assert
-        assertThat(enrichedBook).isNotNull();
-        assertThat(enrichedBook.getTitle()).isEqualTo("Original Title"); // Title shouldn't change
-        assertThat(enrichedBook.getDescription()).isEqualTo("Book description"); // Description should be added
+    when(openLibraryApiClient.getBookByIsbn("1234567890")).thenReturn(metadata);
+    when(bookRepository.findByIsbn(anyString())).thenReturn(Optional.empty());
+    when(bookRepository.save(any())).thenReturn(savedBook);
 
-        verify(openLibraryApiClient, times(1)).getBookByIsbn(anyString());
-    }
 
-    @Test
-    @DisplayName("should return original book when API returns null")
-    void shouldReturnOriginalBookWhenApiReturnsNull() {
-        // Arrange
-        Book book = new Book();
-        book.setIsbn("9999999999");
-        book.setTitle("Original Title");
+    // Act
+    Long createdBookId = bookService.createBook(bookCreationRequest);
 
-        when(openLibraryApiClient.getBookByIsbn("9999999999")).thenReturn(null);
+    // Assert
+    assertThat(createdBookId).isNotNull();
 
-        // Act
-        Book result = bookInfoService.enrichBookWithExternalInfo(book);
-
-        // Assert
-        assertThat(result).isSameAs(book);
-        assertThat(result.getTitle()).isEqualTo("Original Title");
-        assertThat(result.getDescription()).isNull();
-
-        verify(openLibraryApiClient, times(1)).getBookByIsbn("9999999999");
-    }
+    verify(openLibraryApiClient, times(4)).getBookByIsbn(anyString());
+    verify(bookRepository, times(1)).save(any());
+  }
 }

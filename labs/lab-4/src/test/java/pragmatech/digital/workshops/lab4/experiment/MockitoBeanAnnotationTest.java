@@ -1,24 +1,32 @@
 package pragmatech.digital.workshops.lab4.experiment;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockitoBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import pragmatech.digital.workshops.lab4.LocalDevTestcontainerConfig;
 import pragmatech.digital.workshops.lab4.client.OpenLibraryApiClient;
+import pragmatech.digital.workshops.lab4.dto.BookCreationRequest;
 import pragmatech.digital.workshops.lab4.dto.BookMetadataResponse;
 import pragmatech.digital.workshops.lab4.entity.Book;
-import pragmatech.digital.workshops.lab4.service.BookInfoService;
+import pragmatech.digital.workshops.lab4.repository.BookRepository;
 import pragmatech.digital.workshops.lab4.service.BookService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * This test demonstrates the usage of @MockitoBean annotation (a synonym of @MockBean).
- *
+ * <p>
  * Key characteristics of @MockitoBean vs @MockBean:
  * - Functionally equivalent to @MockBean (they do the same thing)
  * - @MockitoBean was introduced in later versions of Spring Boot Test
@@ -26,72 +34,48 @@ import static org.mockito.Mockito.when;
  * - They both replace beans in the Spring context with Mockito mocks
  * - Both create a cache entry per test class, so tests can influence each other
  * - No technical advantage of one over the other
- *
+ * <p>
  * Note: This test also demonstrates how injected mocks work with dependencies between Spring beans
  */
 @SpringBootTest
-@DisplayName("@MockitoBean Annotation Test")
+@Import(LocalDevTestcontainerConfig.class)
+@DisplayName("@MockBean Annotation Test")
 class MockitoBeanAnnotationTest {
 
-    @MockitoBean
-    private OpenLibraryApiClient openLibraryApiClient;
+  @MockitoBean
+  private OpenLibraryApiClient openLibraryApiClient;
 
-    @Autowired
-    private BookInfoService bookInfoService;
+  @MockitoBean
+  private BookRepository bookRepository;
 
-    @Autowired
-    private BookService bookService;
+  @Autowired
+  private BookService bookService;
 
-    @Test
-    @DisplayName("should demonstrate how mocked dependencies affect other services")
-    void shouldDemonstrateHowMockedDependenciesAffectOtherServices() {
-        // Arrange
-        Book book = new Book();
-        book.setIsbn("1234567890");
-        book.setTitle("Original Title");
+  @Test
+  void shouldEnrichBookWithExternalInfoFromMockedClient() {
+    // Arrange
+    BookCreationRequest bookCreationRequest = new BookCreationRequest("1234567890", "Original Title", "Mike", LocalDate.now());
 
-        BookMetadataResponse metadata = new BookMetadataResponse(
-                "/books/123",
-                "Enriched Title",
-                null, null, null, null, null, null, null,
-                "Book description", null, null);
+    BookMetadataResponse metadata = new BookMetadataResponse(
+      "/books/123",
+      "Enriched Title",
+      null, null, null, null, null, null, null,
+      "Book description", null, null);
 
-        // Set up the mock that's used by BookInfoService
-        when(openLibraryApiClient.getBookByIsbn("1234567890")).thenReturn(metadata);
+    Book savedBook = new Book();
+    savedBook.setId(42L);
 
-        // Act - Use BookService which internally uses BookInfoService (which uses our mocked client)
-        // This demonstrates how the mock propagates through the dependency injection chain
-        // Note: We're not setting up the actual BookService method call here for simplicity
-        bookInfoService.enrichBookWithExternalInfo(book);
+    when(openLibraryApiClient.getBookByIsbn("1234567890")).thenReturn(metadata);
+    when(bookRepository.findByIsbn(anyString())).thenReturn(Optional.empty());
+    when(bookRepository.save(any())).thenReturn(savedBook);
 
-        // Assert that our mock was called
-        verify(openLibraryApiClient, times(1)).getBookByIsbn("1234567890");
+    // Act
+    Long createdBookId = bookService.createBook(bookCreationRequest);
 
-        // And the book was enriched with description from our mocked response
-        assertThat(book.getDescription()).isEqualTo("Book description");
-    }
+    // Assert
+    assertThat(createdBookId).isNotNull();
 
-    @Test
-    @DisplayName("should reset mock behavior between tests")
-    void shouldResetMockBehaviorBetweenTests() {
-        // This mock was set up in the previous test with different behavior
-        // But Mockito automatically resets mocks between tests, so we don't see that behavior here
-
-        // Arrange
-        Book book = new Book();
-        book.setIsbn("1234567890");
-
-        // No mock setup - using default behavior (returns null)
-
-        // Act
-        Book result = bookInfoService.enrichBookWithExternalInfo(book);
-
-        // Assert
-        assertThat(result).isSameAs(book);
-        // Description is null because our mock returns null by default in this test
-        assertThat(result.getDescription()).isNull();
-
-        // Still called the mock
-        verify(openLibraryApiClient, times(1)).getBookByIsbn("1234567890");
-    }
+    verify(openLibraryApiClient, times(4)).getBookByIsbn(anyString());
+    verify(bookRepository, times(1)).save(any());
+  }
 }

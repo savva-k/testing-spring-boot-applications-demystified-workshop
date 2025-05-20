@@ -21,11 +21,10 @@ import pragmatech.digital.workshops.lab4.entity.BookStatus;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This test demonstrates JUnit 4 style testing.
- * 
+ *
  * Key characteristics of JUnit 4:
  * - Uses @RunWith for extension mechanism
  * - @Before and @After for setup/teardown
@@ -41,26 +40,26 @@ import java.util.concurrent.TimeUnit;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class JUnit4StyleTest {
-    
+
     private Book book;
-    
+
     @Mock
     private OpenLibraryApiClient apiClient;
-    
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
+
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-    
+
     @Rule
     public Timeout globalTimeout = Timeout.seconds(1);
-    
+
     @BeforeClass
     public static void setUpClass() {
         System.out.println("Set up once before all tests in the class");
     }
-    
+
     @Before
     public void setUp() {
         book = new Book();
@@ -70,7 +69,7 @@ public class JUnit4StyleTest {
         book.setPublishedDate(LocalDate.now());
         book.setStatus(BookStatus.AVAILABLE);
     }
-    
+
     @Test
     public void testBookProperties() {
         // JUnit 4 style assertions
@@ -79,62 +78,62 @@ public class JUnit4StyleTest {
         Assert.assertEquals(BookStatus.AVAILABLE, book.getStatus());
         Assert.assertTrue(book.isAvailable());
     }
-    
+
     @Test
     public void testBookIsAvailable() {
         // Test that book is available by default
         Assert.assertTrue(book.isAvailable());
-        
+
         // Change status
         book.setStatus(BookStatus.BORROWED);
-        
+
         // Test that book is not available after status change
         Assert.assertFalse(book.isAvailable());
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void testExceptionUsingAnnotation() {
         // This will throw NPE
         String str = null;
         str.length();
     }
-    
+
     @Test
     public void testExceptionUsingRule() {
         // Set up expected exception
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("ISBN cannot be null");
-        
+
         // This should throw the expected exception
         throw new IllegalArgumentException("ISBN cannot be null");
     }
-    
+
     @Test
     public void testWithTemporaryFolder() throws IOException {
         // Create temp file using JUnit 4 rule
         File tempFile = folder.newFile("testFile.txt");
-        
+
         // Assert file was created
         Assert.assertTrue(tempFile.exists());
     }
-    
+
     @Test(timeout = 100)
     public void testWithTimeout() throws InterruptedException {
         // This test will pass because it completes within 100ms
         Thread.sleep(50);
     }
-    
+
     @Ignore("Demonstrates how to skip a test in JUnit 4")
     @Test
     public void testThatIsIgnored() {
         Assert.fail("This test should be ignored and not run");
     }
-    
+
     @After
     public void tearDown() {
         book = null;
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
         System.out.println("Tear down once after all tests in the class");
