@@ -40,7 +40,7 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 
 # Organization
 
-- Hotel WLAN: TBD
+- Hotel WiFi: Spring I/O Password: `bootifulBCN`
 - Slides & Code will be shared
 - Workshop lab requirements
   - Java 21

@@ -2,7 +2,7 @@
 
 ## General
 
-- Network: WiFi
+- Network: WiFi: Spring I/O Password: `bootifulBCN`
 
 Schedule: 
 
