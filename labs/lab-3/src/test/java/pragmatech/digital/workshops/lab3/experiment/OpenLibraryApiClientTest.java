@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import pragmatech.digital.workshops.lab3.client.OpenLibraryApiClient;
-import pragmatech.digital.workshops.lab3.dto.BookMetadataDTO;
+import pragmatech.digital.workshops.lab3.dto.BookMetadataResponse;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -59,7 +59,7 @@ class OpenLibraryApiClientTest {
       );
 
       // Act
-      BookMetadataDTO result = cut.getBookByIsbn(isbn);
+      BookMetadataResponse result = cut.getBookByIsbn(isbn);
 
       // Assert
       assertThat(result).isNotNull();
@@ -82,7 +82,7 @@ class OpenLibraryApiClientTest {
       );
 
       // Act
-      BookMetadataDTO result = cut.getBookByIsbn(isbn);
+      BookMetadataResponse result = cut.getBookByIsbn(isbn);
 
       // Assert
       assertThat(result).isNull();

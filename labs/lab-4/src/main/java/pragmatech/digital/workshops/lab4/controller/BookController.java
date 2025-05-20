@@ -1,56 +1,72 @@
 package pragmatech.digital.workshops.lab4.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pragmatech.digital.workshops.lab4.entity.Book;
-import pragmatech.digital.workshops.lab4.service.BookService;
-
 import java.util.List;
+
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+import pragmatech.digital.workshops.lab4.dto.BookCreationRequest;
+import pragmatech.digital.workshops.lab4.dto.BookUpdateRequest;
+import pragmatech.digital.workshops.lab4.entity.Book;
+import pragmatech.digital.workshops.lab4.repository.BookRepository;
+import pragmatech.digital.workshops.lab4.service.BookService;
 
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
-    
-    private final BookService bookService;
-    
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
-    
-    @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.findAllAvailableBooks();
-    }
-    
-    @GetMapping("/{isbn}")
-    public ResponseEntity<Book> getBookByIsbn(@PathVariable String isbn) {
-        return bookService.findByIsbn(isbn)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-    
-    @PostMapping
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        try {
-            Book createdBook = bookService.createBook(book);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @GetMapping("/{isbn}/enriched")
-    public ResponseEntity<Book> getEnrichedBook(@PathVariable String isbn) {
-        try {
-            Book enrichedBook = bookService.enrichBookWithExternalInfo(isbn);
-            return ResponseEntity.ok(enrichedBook);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+
+  private final BookService bookService;
+  private final BookRepository bookRepository;
+
+  public BookController(BookService bookService, BookRepository bookRepository) {
+    this.bookService = bookService;
+    this.bookRepository = bookRepository;
+  }
+
+  @GetMapping
+  public List<Book> getAllBooks() {
+    return bookService.getAllBooks();
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+    return bookService.getBookById(id)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping
+  public ResponseEntity<Void> createBook(@Valid @RequestBody BookCreationRequest request, UriComponentsBuilder uriComponentsBuilder) {
+    Long id = bookService.createBook(request);
+
+    return ResponseEntity.created(
+        uriComponentsBuilder.path("/api/books/{id}")
+          .buildAndExpand(id)
+          .toUri())
+      .build();
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Book> updateBook(
+    @PathVariable Long id,
+    @Valid @RequestBody BookUpdateRequest request) {
+    return bookService.updateBook(id, request)
+      .map(ResponseEntity::ok)
+      .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    return bookService.deleteBook(id)
+      ? ResponseEntity.noContent().build()
+      : ResponseEntity.notFound().build();
+  }
 }

@@ -7,8 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pragmatech.digital.workshops.lab3.client.OpenLibraryApiClient;
-import pragmatech.digital.workshops.lab3.dto.BookMetadataDTO;
-import pragmatech.digital.workshops.lab3.entity.Book;
+import pragmatech.digital.workshops.lab3.dto.BookMetadataResponse;
 import pragmatech.digital.workshops.lab3.repository.BookRepository;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class InitializationConfig {
             logger.info("Fetching metadata for {} books", sampleIsbns.size());
 
             for (String isbn : sampleIsbns) {
-              BookMetadataDTO metadata = this.openLibraryApiClient.getBookByIsbn(isbn);
+              BookMetadataResponse metadata = this.openLibraryApiClient.getBookByIsbn(isbn);
               logger.info("Fetched metadata for ISBN {} - {}", isbn, metadata);
 
             }

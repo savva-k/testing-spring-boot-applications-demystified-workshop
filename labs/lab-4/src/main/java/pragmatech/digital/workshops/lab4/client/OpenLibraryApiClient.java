@@ -1,4 +1,4 @@
-package pragmatech.digital.workshops.lab3.client;
+package pragmatech.digital.workshops.lab4.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import pragmatech.digital.workshops.lab3.dto.BookMetadataResponse;
+import pragmatech.digital.workshops.lab4.dto.BookMetadataResponse;
 import reactor.core.publisher.Mono;
 
 /**

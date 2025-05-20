@@ -10,11 +10,11 @@
 
 ## Lab 3
 
-- [ ] Take over the entire code base (not the test code) at the state of labs/lab-2 to have a consistent ongoing code base. In lab-3 we will evolve it a bit.
+- [X] Take over the entire code base (not the test code) at the state of labs/lab-2 to have a consistent ongoing code base. In lab-3 we will evolve it a bit.
 
 - [X] In labs/lab-3, Develop a HTTP client with Spring's new RestCLient to fetch metadata about a book from a remote API. Next, develop a HTTP client test for it using WireMock and real stubbed JSON responses. Furthermore, add a sample HTTP call to this client that gets called during application startup to later on show the usage of ContextInitializers for stubbing.
 
-- [ ] In pragmatech.digitial.workshops.lab3.experiment add a test to showcase the difference of MockMvc and WebTestClient when it comes to thread context, data access and rollback
+- [X] In pragmatech.digitial.workshops.lab3.experiment add a test to showcase the difference of MockMvc and WebTestClient when it comes to thread context, data access and rollback
 
 - [X] Please create an SVG graphic to explain the usage of WireMock as a replacement of a real remote HTTP system for testing purposes
 
@@ -22,15 +22,15 @@
 
 ## Lab 4
 
-- [ ] Take over the entire code base (not the test code) at the state of labs/lab-3 to have a consistent ongoing code base. In lab-4 we will evolve it a bit.
+- [ ] For labs/lab-4, Take over the entire code base (not the test code) at the state of labs/lab-3 to have a consistent ongoing code base. In lab-4 we will evolve it a bit.
 
-- [ ] In the pragmatech.digitial.workshops.lab3.experiment folder, create three test classes to help the audience understand the difference between @Mock, @MockBean and @MockitoBean
+- [ ] For labs/lab-4 in the pragmatech.digitial.workshops.lab4.experiment folder, create three test classes to help the audience understand the difference between @Mock, @MockBean and @MockitoBean
 
-- [ ] In the pragmatech.digitial.workshops.lab3.experiment folder, create two test classes to showcase the different API/imports between JUnit 4 and 5
+- [ ] For labs/lab-4 in the pragmatech.digitial.workshops.lab4.experiment, create two test classes to showcase the different API/imports between JUnit 4 and 5
 
-- [ ] In the pragmatech.digitial.workshops.lab3.experiment folder, add a sample bad Unit test in our book domain to showcase mutation testing, also include the relevant PIT config for it
+- [ ] For labs/lab-4 in the pragmatech.digitial.workshops.lab4.experiment, add a sample bad Unit test in our book domain to showcase mutation testing, also include the relevant PIT config for it
 
-- [ ] in lab4, configure the failsafe and surefire with different JUnit jupiter parallelization configs and use the forkMode for junit, add some sample tests in a pragmatech.digitial.workshops.lab3.parallel folder (normal unittest and integration test) with some logging to see on which JVM and which thread they run -> help me educate about test parallelization
+- [ ] For labs/lab-4, configure the failsafe and surefire with different JUnit jupiter parallelization configs and use the forkMode for junit, add some sample tests in a pragmatech.digitial.workshops.lab3.parallel folder (normal unittest and integration test) with some logging to see on which JVM and which thread they run -> help me educate about test parallelization
 
 ## Houskeeping
 

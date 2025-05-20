@@ -32,13 +32,6 @@ public class BookController {
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
   }
-  
-  @GetMapping("/isbn/{isbn}")
-  public ResponseEntity<Book> getBookByIsbn(@PathVariable String isbn) {
-    return bookService.getBookByIsbn(isbn)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
-  }
 
   @PostMapping
   public ResponseEntity<Void> createBook(@Valid @RequestBody BookCreationRequest request, UriComponentsBuilder uriComponentsBuilder) {
@@ -59,26 +52,10 @@ public class BookController {
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
   }
-  
-  @PutMapping("/isbn/{isbn}")
-  public ResponseEntity<Book> updateBookByIsbn(
-      @PathVariable String isbn,
-      @Valid @RequestBody BookUpdateRequest request) {
-    return bookService.updateBookByIsbn(isbn, request)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
-  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
     return bookService.deleteBook(id)
-      ? ResponseEntity.noContent().build()
-      : ResponseEntity.notFound().build();
-  }
-  
-  @DeleteMapping("/isbn/{isbn}")
-  public ResponseEntity<Void> deleteBookByIsbn(@PathVariable String isbn) {
-    return bookService.deleteBookByIsbn(isbn)
       ? ResponseEntity.noContent().build()
       : ResponseEntity.notFound().build();
   }

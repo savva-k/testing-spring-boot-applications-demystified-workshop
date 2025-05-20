@@ -39,15 +39,6 @@ The codespace includes:
 
 For more information, see the [Codespaces documentation](.devcontainer/README.md).
 
-## Todos
-
-- [ ] ZIP Version to share for non-git Users
-- [ ] Workshop infos, links for attendees on my company website
-- [ ] Prepare template for the certificate of completion
-- [ ] Show IDEA shortcut for fast test run
-- [ ] Optimize code and remove imports
-- [ ] Secure Workshop
-
 ## Lab Structure
 
 See the content of the [labs](labs) folder for the content per lab.
