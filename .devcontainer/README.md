@@ -1,13 +1,12 @@
-# Development Container for Spring Boot Testing Workshop
+# Development Container for the Workshop
 
 This directory contains configuration for a development container that can be used with GitHub Codespaces or local development with VS Code Remote Containers.
 
 ## Features
 
 - Java 21 (OpenJDK)
-- Maven 3.9.6
-- Docker-in-Docker (for TestContainers)
-- PlantUML for diagram generation
+- Maven
+- Docker-in-Docker (for Testcontainers)
 - VS Code extensions for Spring Boot development
 - Pre-configured settings
 
@@ -34,10 +33,9 @@ After the container is set up, it automatically:
 
 1. Configures Git settings
 2. Installs additional dependencies
-3. Sets up Java security properties for TestContainers
-4. Generates PNG versions of PlantUML diagrams
-5. Makes Maven wrapper executable
-6. Downloads Maven dependencies for faster workshop experience
+3. Pulls required Docker images
+4. Makes Maven wrapper executable
+5. Downloads Maven dependencies for faster workshop experience
 
 ## Troubleshooting
 
@@ -46,4 +44,4 @@ If you encounter issues with the setup:
 1. Check the terminal output during container creation for errors
 2. Try running the setup script manually: `.devcontainer/setup.sh`
 3. Ensure Docker is running properly by executing `docker ps`
-4. For TestContainers issues, check the Docker socket is correctly mounted
+4. For Testcontainers issues, check the Docker socket is correctly mounted

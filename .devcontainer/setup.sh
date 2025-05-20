@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Setting up Spring Boot Testing Workshop environment..."
+echo "Setting up the workshop environment..."
 
 # Configure Git
 git config --global pull.rebase true
