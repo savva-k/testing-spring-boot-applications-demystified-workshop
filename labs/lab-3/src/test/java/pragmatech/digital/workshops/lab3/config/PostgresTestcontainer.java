@@ -11,8 +11,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * Uses TestContainers to start a PostgreSQL container for integration tests.
  */
 @Testcontainers
-public abstract class PostgresTestContainer {
-    
+public abstract class PostgresTestcontainer {
+
     /**
      * The PostgreSQL container. Using a static field ensures that the container
      * is started only once for all tests.
@@ -22,12 +22,12 @@ public abstract class PostgresTestContainer {
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
-    
+
     static {
         // Start the container before any tests are run
         postgresContainer.start();
     }
-    
+
     /**
      * Configure Spring to use the TestContainers PostgreSQL instance.
      */
