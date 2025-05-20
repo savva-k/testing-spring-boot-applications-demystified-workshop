@@ -196,6 +196,18 @@ static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-
 
 ---
 
+## Test Data Management
+
+- Each test should start with a known state
+- Tests should not interfere with each other
+- Options:
+  - Truncate tables between tests
+  - Transaction rollback (`@Transactional`)
+  - Separate schemas per test
+  - Database resets
+
+---
+
 ## Testing Native Queries
 
 ```java

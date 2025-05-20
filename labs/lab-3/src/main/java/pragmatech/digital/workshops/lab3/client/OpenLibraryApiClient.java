@@ -22,11 +22,11 @@ public class OpenLibraryApiClient {
     this.webClient = openLibraryWebClient;
   }
 
-  public BookMetadataResponse getBookByIsbn(String isbn) {
-    return webClient.get()
-      .uri("/isbn/{isbn}", isbn)
-      .retrieve()
-      .bodyToMono(BookMetadataResponse.class)
-      .block();
-  }
+public BookMetadataResponse getBookByIsbn(String isbn) {
+  return webClient.get()
+    .uri("/isbn/{isbn}", isbn)
+    .retrieve()
+    .bodyToMono(BookMetadataResponse.class)
+    .block();
+}
 }

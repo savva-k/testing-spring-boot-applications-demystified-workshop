@@ -7,6 +7,13 @@ theme: pragmatech
 
 ---
 
+<style>
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
 <!-- _class: title -->
 ![bg h:500 left:33%](assets/generated/demystify.png)
 
@@ -33,161 +40,161 @@ Philip Riecks - [PragmaTech GmbH](https://pragmatech.digital/) - [@rieckpil](htt
 ---
 <!-- _class: section -->
 
-# SECTION 3
-# Integration Testing
+# Starting Everything
+## Writing Tests Against a Complete Application Context
+
+![bg right:33%](assets/generated/full.jpg)
 
 ---
 
-# Integration Testing with Spring Boot
+<!--
 
-- Test multiple application layers together
-- Verify component interactions
-- Test with real external dependencies
-- Ensure end-to-end functionality
+Notes:
 
-- Intro to WireMock
-- Intro to Testcontainers
-- Enrich the API with calls to OpenLibrary to have stubs
-- Stub on application start and during runtime
+-->
+
+## The Default Integration Test
+
+![](assets/generated/spring-boot-test-setup.png)
 
 ---
 
-<!-- _class: code -->
+## Starting the Entire Context
 
-# @SpringBootTest
+- Provide external infrastructure with [Testcontainers](https://testcontainers.com/)
+- Start Tomcat with: `@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)`
+- Consider WireMock/MockServer for stubbing external HTTP services
+- Test controller endpoints via: `MockMvc`, `WebTestClient`, `TestRestTemplate`
+
+---
+
+## Introducing: Microservice HTTP Communication
 
 ```java
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class BookApplicationIntegrationTest {
-    @Autowired
-    private TestRestTemplate restTemplate;
-    
-    @Autowired
-    private BookRepository bookRepository;
-}
-```
-
-- Loads full application context
-- Starts embedded server with random port
-- Configures TestRestTemplate
-- Much heavier than sliced tests
-
----
-
-# Testing from the Outside
-
-```java
-@Test
-void createBookShouldStoreInDatabase() {
-    // Prepare test data
-    Book newBook = new Book("123", "Test Book", "Test Author");
-    
-    // Make HTTP request
-    ResponseEntity<Book> response = restTemplate.postForEntity(
-        "/api/books", newBook, Book.class
-    );
-    
-    // Verify HTTP response
-    assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    assertNotNull(response.getBody());
-    
-    // Verify database state
-    Optional<Book> stored = bookRepository.findById("123");
-    assertTrue(stored.isPresent());
-    assertEquals("Test Book", stored.get().getTitle());
+public BookMetadataResponse getBookByIsbn(String isbn) {
+  return webClient.get()
+    .uri("/isbn/{isbn}", isbn)
+    .retrieve()
+    .bodyToMono(BookMetadataResponse.class)
+    .block();
 }
 ```
 
 ---
 
-# External Dependencies in Tests
+## HTTP Communication During Tests
 
-- Need real databases, message brokers, services
-- Cannot use in-memory alternatives for everything
-- Must be repeatable and isolated
-- Should be fast and reliable
-
-Enter: **Testcontainers**
-
----
-
-# Testcontainers
-
-- Docker containers for tests
-- Real database instances
-- Consistent test environment
-- Automatic cleanup
-- Wide range of supported systems
+- Unreliable when performing real HTTP responses during tests
+- Sample data? 
+- Authentication?
+- Cleanup?
+- No airplane-mode testing possible anymore
+- Solution: Stub the HTTP responses for remote system
 
 ---
 
-<!-- _class: code -->
+![w:1200 h:500](assets/wiremock-usage.svg)
 
-# PostgreSQL with Testcontainers
+---
+
+## Introducing WireMock
+
+- In-memory (or container) Jetty to stub HTTP responses
+- Simulate failures, slow responses, etc.
+- Stateful setups possible (scenarios): first request fails, then succeeds
+- Alternatives: MockServer, MockWebServer, etc.
 
 ```java
-@SpringBootTest
-@Testcontainers
-class DatabaseIntegrationTest {
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14.5")
-        .withDatabaseName("testdb")
-        .withUsername("test")
-        .withPassword("test");
-    
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-}
+wireMockServer.stubFor(
+  get("/isbn/" + isbn)
+    .willReturn(aResponse()
+      .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+      .withBodyFile(isbn + "-success.json"))
+);
 ```
 
 ---
 
-# Test Data Management
+## Making Our Application Context Start
 
-- Each test should start with a known state
-- Tests should not interfere with each other
-- Options:
-  - Truncate tables between tests
-  - Transaction rollback
-  - Separate schemas per test
-  - Database resets
-
----
-
-# Test Data Cleanup Example
+- Stubbing HTTP responses during the launch of our Spring Context
+- Introducing a new concept: `ContextInitializer`
 
 ```java
-@BeforeEach
-void setUp() {
-    // Clean database before test
-    jdbcTemplate.execute("DELETE FROM book_loans");
-    jdbcTemplate.execute("DELETE FROM book_reviews");
-    jdbcTemplate.execute("DELETE FROM books");
-    
-    // Insert test data
-    jdbcTemplate.update(
-        "INSERT INTO books VALUES (?, ?, ?, ?, ?)",
-        "123", "Test Book", "Test Author", LocalDate.now(), "AVAILABLE"
-    );
-}
+WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort());
+
+wireMockServer.start();
+
+// Register a shutdown hook to stop WireMock when the context is closed
+applicationContext.addApplicationListener(event -> {
+  if (event instanceof ContextClosedEvent) {
+    logger.info("Stopping WireMock server");
+    wireMockServer.stop();
+  }
+});
+
+TestPropertyValues.of(
+  "book.metadata.api.url=http://localhost:" + wireMockServer.port()
+).applyTo(applicationContext);
 ```
 
 ---
+<!--
 
-# Spring Test Context Caching
+- Go to `DefaultContextCache` to show the cache
 
-- Creating application contexts is expensive
-- Spring caches contexts between tests
-- Same configuration = reused context
-- Different configuration = new context
+-->
+
+## Spring Test `TestContext` Caching
+
+- Part of Spring Test (automatically part of every Spring Boot project via `spring-boot-starter-test`)
+- Spring Test caches an already started Spring `ApplicationContext` for later reuse
+- Cache retrieval is usually faster than a cold context start
+- Configurable cache size (default is 32) with LRU (least recently used) strategy
+
+Speed up your build:
+
+![](assets/generated/context-cache-improvements.png)
 
 ---
 
-# Context Caching Issues
+## Caching is King
+
+![center](assets/cache.svg)
+
+---
+
+## How the Cache Key is Built
+
+This goes into the cache key (`MergedContextConfiguration`):
+
+- activeProfiles (`@ActiveProfiles`)
+- contextInitializersClasses (`@ContextConfiguration`)
+- propertySourceLocations (`@TestPropertySource`)
+- propertySourceProperties (`@TestPropertySource`)
+- contextCustomizer (`@MockitoBean`, `@MockBean`, `@DynamicPropertySource`, ...)
+
+---
+## Identify Context Restarts
+
+![](assets/context-caching-hints.png)
+
+
+---
+
+## Investigate the Logs
+
+![](assets/context-caching-logs.png)
+
+---
+
+## Spot the Issues for Context Caching
+
+![](assets/context-caching-bad.png)
+
+---
+
+## Context Caching Issues
 
 Common problems that break caching:
 
@@ -199,125 +206,24 @@ Common problems that break caching:
 
 ---
 
-# Optimizing Context Caching
+## Make the Most of the Caching Feature
 
-```java
-// Bad - different properties = different contexts
-@SpringBootTest(properties = "spring.profiles.active=test1")
-class Test1 { }
 
-@SpringBootTest(properties = "spring.profiles.active=test2")
-class Test2 { }
-
-// Good - shared configuration = single context
-@SpringBootTest
-@ActiveProfiles("test")
-class Test1 { }
-
-@SpringBootTest
-@ActiveProfiles("test")
-class Test2 { }
-```
+- Avoid `@DirtiesContext` when possible, especially at `AbstractIntegrationTest` classes
+- Understand how the cache key is built
+- Monitor and investigate the context restarts
+- Align the number of unique context configurations for your test suite
 
 ---
 
-# Avoiding @DirtiesContext
+# External Dependencies in Tests
 
-```java
-// Bad - marks context as dirty after each test
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-void testThatModifiesState() {
-    // ...
-}
+- Need real databases, message brokers, services
+- Cannot use in-memory alternatives for everything
+- Must be repeatable and isolated
+- Should be fast and reliable
 
-// Good - manually cleans up state
-@BeforeEach
-void setUp() {
-    // Reset database or other state
-    jdbcTemplate.execute("DELETE FROM books");
-}
-```
-
----
-
-# Exercise: Fix Context Caching Issues
-
-Identify and fix three integration tests that break context caching:
-1. Tests with different property configurations
-2. Tests using @DirtiesContext unnecessarily
-3. Tests that modify shared beans
-
----
-
-# Testing HTTP APIs
-
-- TestRestTemplate - Synchronous REST client
-- WebTestClient - Reactive REST client
-- RestAssured - BDD-style REST testing
-
----
-
-# TestRestTemplate Example
-
-```java
-@Test
-void getBookByIsbnReturnsCorrectData() {
-    // Prepare database with test data
-    insertTestBook("123", "Test Title", "Test Author");
-    
-    // Make HTTP request
-    ResponseEntity<Book> response = restTemplate.getForEntity(
-        "/api/books/123", Book.class
-    );
-    
-    // Verify response
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals("Test Title", response.getBody().getTitle());
-}
-```
-
----
-
-# Working with Collections
-
-```java
-@Test
-void getAllBooksReturnsAllBooks() {
-    // Setup test data
-    insertTestBooks();
-    
-    // Request collection
-    ResponseEntity<List<Book>> response = restTemplate.exchange(
-        "/api/books",
-        HttpMethod.GET,
-        null,
-        new ParameterizedTypeReference<List<Book>>() {}
-    );
-    
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(2, response.getBody().size());
-}
-```
-
----
-
-# Exercise: Full HTTP API Test
-
-Write a comprehensive test for the books API:
-1. Set up test data with Testcontainers and PostgreSQL
-2. Test CRUD operations via HTTP endpoints
-3. Verify database state after operations
-4. Handle collections and complex responses
-
----
-
-# Lab 3: Summary
-
-- Integration testing with full application context
-- Using Testcontainers for real database testing
-- Managing test data effectively
-- Optimizing Spring Test Context caching
-- Testing HTTP APIs from the outside
+Enter: **Testcontainers**
 
 ---
 

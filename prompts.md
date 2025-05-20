@@ -6,7 +6,8 @@
 
 - [X] inside the pragmatech.digitial.workshops.lab2.experiment controller add two tests: BookControllerUnit tests, trying to show what could be tested with a plain unit test using only mockito and Junit, next create in the same package a test called BookControllerTest to showcase the usage of @WebMvcTest and MockMvc to better test with HTTP semantics: proper JSON send, ensure sent data is validated, mapping of custom exceptions, authorization and authentication rules are met. Next, in the same package, add a @WebMvcTest for the LlmBotRequestFilter to demo how a filter can be better tested with MockMvc, also make sure of the new MockMvcTester
 - [X] create an SVG in slides/assets to explain Hibernate/JPA with its entity manager first/second level cache, flushing to the database to understand your inserts are not directly written, it's a write-behind cache with dirty checking
-- [ ] Add Exercises
+
+- [ ] Add Exercises: Play with MockMvc, test a protected endpoint, test the native query with a data preparation of your choice
 
 ## Lab 3
 
