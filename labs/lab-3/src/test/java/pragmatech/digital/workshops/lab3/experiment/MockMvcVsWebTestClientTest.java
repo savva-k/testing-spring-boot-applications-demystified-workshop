@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,13 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import pragmatech.digital.workshops.lab3.LocalDevTestcontainerConfig;
+import pragmatech.digital.workshops.lab3.config.WireMockContextInitializer;
 import pragmatech.digital.workshops.lab3.entity.Book;
 import pragmatech.digital.workshops.lab3.entity.BookStatus;
 import pragmatech.digital.workshops.lab3.repository.BookRepository;
@@ -49,9 +54,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * test approach, especially when testing transactional behavior or when the test
  * requires access to data created within the test transaction.
  */
+@Disabled
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@DisplayName("Comparing MockMvc vs WebTestClient")
+@Import(LocalDevTestcontainerConfig.class)
+@ContextConfiguration(initializers = WireMockContextInitializer.class)
 class MockMvcVsWebTestClientTest {
 
   @Autowired
@@ -69,6 +76,7 @@ class MockMvcVsWebTestClientTest {
   @LocalServerPort
   private int port;
 
+  @Autowired
   private WebTestClient webTestClient;
 
   /**

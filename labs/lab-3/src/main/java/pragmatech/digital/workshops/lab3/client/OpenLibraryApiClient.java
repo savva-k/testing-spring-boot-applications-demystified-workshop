@@ -32,7 +32,7 @@ public class OpenLibraryApiClient {
    */
   public BookMetadataResponse getBookByIsbn(String isbn) {
     return webClient.get()
-      .uri("/isbn/{isbn}.json", isbn)
+      .uri("/isbn/{isbn}", isbn)
       .retrieve()
       .bodyToMono(BookMetadataResponse.class)
       .onErrorResume(WebClientResponseException.NotFound.class, ex -> {

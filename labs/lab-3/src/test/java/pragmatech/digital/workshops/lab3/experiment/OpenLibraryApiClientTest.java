@@ -1,7 +1,6 @@
 package pragmatech.digital.workshops.lab3.experiment;
 
 import java.io.IOException;
-import java.nio.file.Files;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -48,14 +46,12 @@ class OpenLibraryApiClientTest {
     void shouldReturnBookMetadataWhenApiReturnsValidResponse() throws IOException {
       // Arrange
       String isbn = "9780132350884";
-      String responseBody = Files.readString(
-        new ClassPathResource("__files/openlibrary-book-response.json").getFile().toPath());
 
       wireMockServer.stubFor(
-        get("/isbn/" + isbn + ".json")
+        get("/isbn/" + isbn)
           .willReturn(aResponse()
             .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .withBody(responseBody))
+            .withBodyFile(isbn + "-success.json"))
       );
 
       // Act
@@ -63,7 +59,7 @@ class OpenLibraryApiClientTest {
 
       // Assert
       assertThat(result).isNotNull();
-      assertThat(result.title()).isEqualTo("Clean Code: A Handbook of Agile Software Craftsmanship");
+      assertThat(result.title()).isEqualTo("Clean Code");
       assertThat(result.getMainIsbn()).isEqualTo("9780132350884");
       assertThat(result.getPublisher()).isEqualTo("Prentice Hall");
       assertThat(result.numberOfPages()).isEqualTo(431);

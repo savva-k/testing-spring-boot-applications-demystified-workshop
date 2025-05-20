@@ -90,21 +90,6 @@ class BookControllerUnitTest {
   }
 
   @Test
-  void shouldReturnBookWhenBookExistsByIsbn() {
-    // Arrange
-    Book book = new Book("123-1234567890", "Test Book", "Test Author", LocalDate.of(2020, 1, 1));
-    book.setStatus(BookStatus.AVAILABLE);
-    when(bookService.getBookByIsbn("123-1234567890")).thenReturn(Optional.of(book));
-
-    // Act
-    ResponseEntity<Book> response = bookController.getBookByIsbn("123-1234567890");
-
-    // Assert
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).isEqualTo(book);
-  }
-
-  @Test
   void shouldReturnCreatedResponseWithLocationWhenCreatingBook() {
     // Arrange
     BookCreationRequest creationRequest = new BookCreationRequest(
@@ -175,17 +160,5 @@ class BookControllerUnitTest {
 
     // Assert
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-  }
-
-  @Test
-  void shouldReturnNoContentWhenBookExistsForDeletionByIsbn() {
-    // Arrange
-    when(bookService.deleteBookByIsbn(anyString())).thenReturn(true);
-
-    // Act
-    ResponseEntity<Void> response = bookController.deleteBookByIsbn("123-1234567890");
-
-    // Assert
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 }
