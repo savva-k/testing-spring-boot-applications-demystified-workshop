@@ -645,6 +645,9 @@ public class TimingExtension implements BeforeTestExecutionCallback,
 ## Lab 1
 
 - Set up the repository locally
+- GitHub Codespaces (120 hours for personal accounts free per month)
+- Pick at least 4-Cores (16 GB RAM), region `Europe West`
+- Keylayout
 - Navigate to the `lab-1` folder in the repository 
 - Complete the tasks as described in the `README` file of that folder 
 - Time box ~ 15 - 20 minutes (and optionally the coffee break)

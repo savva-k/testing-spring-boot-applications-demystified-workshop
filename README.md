@@ -40,6 +40,7 @@ For more information, see the [Codespaces documentation](.devcontainer/README.md
 - [ ] Prepare template for the certificate of completion
 - [ ] Show IDEA shortcut for fast test run
 - [ ] Optimize code and remove imports
+- [ ] Secure Workshop
 
 ## Workshop Slots
 

@@ -68,13 +68,15 @@
         "editor.codeActionsOnSave": {
           "source.organizeImports": true
         },
-        "editor.fontSize": 14,
+        "editor.fontSize": 16,
         "terminal.integrated.fontSize": 14,
         "debug.console.fontSize": 14,
         "markdown.preview.fontSize": 14,
         "editor.fontFamily": "'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace",
         "editor.fontLigatures": true,
-        "editor.lineHeight": 24
+        "editor.lineHeight": 24,
+        "redhat.telemetry.enabled": false,
+        "java.compile.nullAnalysis.mode": "automatic"
       }
     }
   },
