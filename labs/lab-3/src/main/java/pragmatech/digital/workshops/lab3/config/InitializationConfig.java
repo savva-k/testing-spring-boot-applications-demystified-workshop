@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pragmatech.digital.workshops.lab3.client.OpenLibraryApiClient;
 import pragmatech.digital.workshops.lab3.dto.BookMetadataResponse;
-import pragmatech.digital.workshops.lab3.repository.BookRepository;
 
 /**
  * Configuration for application initialization tasks.
@@ -21,12 +19,9 @@ public class InitializationConfig {
   private static final Logger logger = LoggerFactory.getLogger(InitializationConfig.class);
 
   private final OpenLibraryApiClient openLibraryApiClient;
-  private final BookRepository bookRepository;
 
-  @Autowired
-  public InitializationConfig(OpenLibraryApiClient openLibraryApiClient, BookRepository bookRepository) {
+  public InitializationConfig(OpenLibraryApiClient openLibraryApiClient) {
     this.openLibraryApiClient = openLibraryApiClient;
-    this.bookRepository = bookRepository;
   }
 
   /**
