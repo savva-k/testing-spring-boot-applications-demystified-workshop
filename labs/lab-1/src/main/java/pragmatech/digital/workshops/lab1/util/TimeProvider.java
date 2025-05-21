@@ -8,15 +8,17 @@ import java.time.LocalDateTime;
  * This abstraction makes it easier to test time-dependent code.
  */
 public interface TimeProvider {
-    /**
-     * Returns the current date.
-     * @return the current date
-     */
-    LocalDate getCurrentDate();
-    
-    /**
-     * Returns the current date and time.
-     * @return the current date and time
-     */
-    LocalDateTime getCurrentDateTime();
+  /**
+   * Returns the current date.
+   *
+   * @return the current date
+   */
+  LocalDate getCurrentDate();
+
+  /**
+   * Returns the current date and time.
+   *
+   * @return the current date and time
+   */
+  LocalDateTime getCurrentDateTime();
 }

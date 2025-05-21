@@ -18,108 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Solution2JUnitExtensionTest {
 
-  // Option 1: Class-level extension using @ExtendWith
-  @Nested
-  @ExtendWith(SlowTestDetector.class)
-  @DisplayName("Tests with class-level extension")
-  class ClassLevelExtensionTests {
-
-    @Test
-    @DisplayName("Fast test that should not trigger the slow test warning")
-    void fastTest() {
-      // This test should run quickly
-      int result = 1 + 1;
-      assert result == 2;
-    }
-
-    @Test
-    @DisplayName("Slow test that should trigger the slow test warning")
-    void slowTest() throws InterruptedException {
-      // This test is artificially slowed down to exceed the threshold
-      Thread.sleep(150);
-      int result = 1 + 1;
-      assertEquals(2, result);
-
-    }
-  }
-
-  // Option 2: Method-level extension using @ExtendWith
-  @Nested
-  class MethodLevelExtensionTests {
-
-    @Test
-    @DisplayName("Fast test without extension")
-    void fastTestWithoutExtension() {
-      int result = 1 + 1;
-
-      assertEquals(2, result);
-    }
-
-    @Test
-    @ExtendWith(SlowTestDetector.class)
-    @DisplayName("Slow test with method-level extension")
-    void slowTestWithExtension() throws InterruptedException {
-      Thread.sleep(150);
-      int result = 1 + 1;
-
-      assertEquals(2, result);
-    }
-  }
-
-  // Option 3: Using @RegisterExtension for a field with custom threshold
-  @Nested
-  class RegisterExtensionTests {
-    
-    @RegisterExtension
-    static SlowTestDetector customDetector = new SlowTestDetector(200);
-
-    @Test
-    @DisplayName("Test with default threshold (100ms)")
-    void testWithDefaultThreshold() throws InterruptedException {
-      Thread.sleep(150);
-      int result = 1 + 1;
-      assertEquals(2, result);
-    }
-
-    @Test
-    @DisplayName("Test with custom threshold (200ms)")
-    void testWithCustomThreshold() throws InterruptedException {
-      Thread.sleep(150); // This shouldn't trigger a warning with 200ms threshold
-      int result = 1 + 1;
-      assertEquals(2, result);
-    }
-  }
-
   // Option 4: Using a custom annotation with the extension
   @Target({ElementType.TYPE, ElementType.METHOD})
   @Retention(RetentionPolicy.RUNTIME)
   @ExtendWith(ConfigurableSlowTestDetector.class)
   @interface SlowTestThreshold {
     long value() default 100;
-  }
-
-  @Nested
-  class AnnotationConfiguredTests {
-
-    @Test
-    @SlowTestThreshold
-    @DisplayName("Test with default annotation threshold (100ms)")
-    void testWithDefaultAnnotationThreshold() throws InterruptedException {
-      Thread.sleep(150);
-      int result = 1 + 1;
-
-      assertEquals(2, result);
-    }
-
-    @Test
-    @SlowTestThreshold(300)
-    @DisplayName("Test with custom annotation threshold (300ms)")
-    void testWithCustomAnnotationThreshold() throws InterruptedException {
-      Thread.sleep(150); // This shouldn't trigger a warning with 300ms threshold
-      int result = 1 + 1;
-
-      assertEquals(2, result);
-    }
   }
 
   // Extension implementation
@@ -196,6 +100,102 @@ class Solution2JUnitExtensionTest {
 
     private ExtensionContext.Store getStore(ExtensionContext context) {
       return context.getStore(ExtensionContext.Namespace.create(getClass(), context.getRequiredTestMethod()));
+    }
+  }
+
+  // Option 1: Class-level extension using @ExtendWith
+  @Nested
+  @ExtendWith(SlowTestDetector.class)
+  @DisplayName("Tests with class-level extension")
+  class ClassLevelExtensionTests {
+
+    @Test
+    @DisplayName("Fast test that should not trigger the slow test warning")
+    void fastTest() {
+      // This test should run quickly
+      int result = 1 + 1;
+      assert result == 2;
+    }
+
+    @Test
+    @DisplayName("Slow test that should trigger the slow test warning")
+    void slowTest() throws InterruptedException {
+      // This test is artificially slowed down to exceed the threshold
+      Thread.sleep(150);
+      int result = 1 + 1;
+      assertEquals(2, result);
+
+    }
+  }
+
+  // Option 2: Method-level extension using @ExtendWith
+  @Nested
+  class MethodLevelExtensionTests {
+
+    @Test
+    @DisplayName("Fast test without extension")
+    void fastTestWithoutExtension() {
+      int result = 1 + 1;
+
+      assertEquals(2, result);
+    }
+
+    @Test
+    @ExtendWith(SlowTestDetector.class)
+    @DisplayName("Slow test with method-level extension")
+    void slowTestWithExtension() throws InterruptedException {
+      Thread.sleep(150);
+      int result = 1 + 1;
+
+      assertEquals(2, result);
+    }
+  }
+
+  // Option 3: Using @RegisterExtension for a field with custom threshold
+  @Nested
+  class RegisterExtensionTests {
+
+    @RegisterExtension
+    static SlowTestDetector customDetector = new SlowTestDetector(200);
+
+    @Test
+    @DisplayName("Test with default threshold (100ms)")
+    void testWithDefaultThreshold() throws InterruptedException {
+      Thread.sleep(150);
+      int result = 1 + 1;
+      assertEquals(2, result);
+    }
+
+    @Test
+    @DisplayName("Test with custom threshold (200ms)")
+    void testWithCustomThreshold() throws InterruptedException {
+      Thread.sleep(150); // This shouldn't trigger a warning with 200ms threshold
+      int result = 1 + 1;
+      assertEquals(2, result);
+    }
+  }
+
+  @Nested
+  class AnnotationConfiguredTests {
+
+    @Test
+    @SlowTestThreshold
+    @DisplayName("Test with default annotation threshold (100ms)")
+    void testWithDefaultAnnotationThreshold() throws InterruptedException {
+      Thread.sleep(150);
+      int result = 1 + 1;
+
+      assertEquals(2, result);
+    }
+
+    @Test
+    @SlowTestThreshold(300)
+    @DisplayName("Test with custom annotation threshold (300ms)")
+    void testWithCustomAnnotationThreshold() throws InterruptedException {
+      Thread.sleep(150); // This shouldn't trigger a warning with 300ms threshold
+      int result = 1 + 1;
+
+      assertEquals(2, result);
     }
   }
 }

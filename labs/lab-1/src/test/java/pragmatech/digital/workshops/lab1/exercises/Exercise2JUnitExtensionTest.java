@@ -41,7 +41,8 @@ class Exercise2JUnitExtensionTest {
     // TODO: Add extension at method level if using method-level approach
   void slowTest() throws InterruptedException {
     // This test is artificially slowed down to exceed the threshold
-    Thread.sleep(150); int result = 1 + 1;
+    Thread.sleep(150);
+    int result = 1 + 1;
 
     assertEquals(2, result);
   }

@@ -1,12 +1,15 @@
 package pragmatech.digital.workshops.lab1.solutions;
 
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class Solution3AssertJTest {
@@ -119,6 +122,6 @@ class Solution3AssertJTest {
   }
 
   // User class for testing
-    record User(String username, String firstName, String lastName, int age, List<String> tags) {
+  record User(String username, String firstName, String lastName, int age, List<String> tags) {
   }
 }
