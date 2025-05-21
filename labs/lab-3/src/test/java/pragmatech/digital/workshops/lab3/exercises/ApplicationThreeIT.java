@@ -24,15 +24,15 @@ import pragmatech.digital.workshops.lab3.service.BookService;
 @ActiveProfiles("test")
 class ApplicationThreeIT {
 
-    @Autowired
-    private BookRepository bookRepository;
+  @Autowired
+  private BookRepository bookRepository;
 
-    @MockitoBean
-    private BookService bookService;
+  @MockitoBean
+  private BookService bookService;
 
-    @Test
-    void contextLoads() {
-        // Verify that the application context loads successfully
-        System.out.println("ApplicationThreeIT - Context loaded successfully");
-    }
+  @Test
+  void contextLoads() {
+    // Verify that the application context loads successfully
+    System.out.println("ApplicationThreeIT - Context loaded successfully");
+  }
 }

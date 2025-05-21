@@ -16,15 +16,14 @@ import pragmatech.digital.workshops.lab3.config.WireMockContextInitializer;
 @ContextConfiguration(initializers = WireMockContextInitializer.class)
 class SampleIT {
 
-  @Autowired
-  private ObjectMapper objectMapper;
-
   @Container
   @ServiceConnection
   static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine")
     .withDatabaseName("testdb")
     .withUsername("test")
     .withPassword("test");
+  @Autowired
+  private ObjectMapper objectMapper;
 
   @Test
   void testSample() {

@@ -42,12 +42,12 @@ class OpenLibraryApiClientTest {
     // Arrange
     String isbn = "9780132350884";
 
-wireMockServer.stubFor(
-  get("/isbn/" + isbn)
-    .willReturn(aResponse()
-      .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-      .withBodyFile(isbn + "-success.json"))
-);
+    wireMockServer.stubFor(
+      get("/isbn/" + isbn)
+        .willReturn(aResponse()
+          .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+          .withBodyFile(isbn + "-success.json"))
+    );
 
     // Act
     BookMetadataResponse result = cut.getBookByIsbn(isbn);

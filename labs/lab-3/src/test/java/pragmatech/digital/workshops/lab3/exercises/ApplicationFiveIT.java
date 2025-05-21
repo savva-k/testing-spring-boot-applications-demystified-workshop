@@ -18,16 +18,16 @@ import pragmatech.digital.workshops.lab3.repository.BookRepository;
 @Import(LocalDevTestcontainerConfig.class)
 @ContextConfiguration(initializers = WireMockContextInitializer.class)
 @TestPropertySource(properties = {
-    "book.metadata.api.timeout=10"
+  "book.metadata.api.timeout=10"
 })
 class ApplicationFiveIT {
 
-    @Autowired
-    private BookRepository bookRepository;
+  @Autowired
+  private BookRepository bookRepository;
 
-    @Test
-    void contextLoads() {
-        // Verify that the application context loads successfully
-        System.out.println("ApplicationFiveIT - Context loaded successfully");
-    }
+  @Test
+  void contextLoads() {
+    // Verify that the application context loads successfully
+    System.out.println("ApplicationFiveIT - Context loaded successfully");
+  }
 }

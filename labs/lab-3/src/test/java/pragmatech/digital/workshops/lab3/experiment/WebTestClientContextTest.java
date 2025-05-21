@@ -1,9 +1,6 @@
 package pragmatech.digital.workshops.lab3.experiment;
 
 import java.time.LocalDate;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.persistence.EntityManager;
