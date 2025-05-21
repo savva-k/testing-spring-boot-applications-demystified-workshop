@@ -66,7 +66,7 @@ public class BookService {
       })
       .orElse(false);
   }
-  
+
   public boolean deleteBookByIsbn(String isbn) {
     return bookRepository.findByIsbn(isbn)
       .map(book -> {

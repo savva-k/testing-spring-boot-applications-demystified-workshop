@@ -20,7 +20,6 @@ import pragmatech.digital.workshops.lab2.repository.BookRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This test class demonstrates testing JPA repositories with a real PostgreSQL database

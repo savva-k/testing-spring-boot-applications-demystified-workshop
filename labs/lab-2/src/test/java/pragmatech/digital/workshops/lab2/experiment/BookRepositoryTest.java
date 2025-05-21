@@ -29,12 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookRepositoryTest {
 
-  @Autowired
-  private BookRepository bookRepository;
-
-  @Autowired
-  private TestEntityManager testEntityManager;
-
   @Container
   @ServiceConnection
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
@@ -42,6 +36,10 @@ class BookRepositoryTest {
     .withUsername("test")
     .withPassword("test")
     .withInitScript("init-postgres.sql");
+  @Autowired
+  private BookRepository bookRepository;
+  @Autowired
+  private TestEntityManager testEntityManager;
 
   @Test
   void shouldStoreAndRetrieveEntity() {
