@@ -1,6 +1,7 @@
 package pragmatech.digital.workshops.lab3.exercises;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.http.MediaType;
@@ -40,21 +41,22 @@ public class Exercise1WireMockTest {
     .options(wireMockConfig().dynamicPort())
     .build();
 
-  @Test
-  void shouldReturnBookMetadataWhenApiReturnsValidResponse() {
-    // TODO:
-    // 1. Set up WireMock server (using extension or manually)
-    // 2. Configure WebClient to point to WireMock
-    // 3. Create OpenLibraryApiClient with the WebClient
-    // 4. Stub a successful response for a specific ISBN
-    // 5. Call the client and verify the response
+  private OpenLibraryApiClient openLibraryApiClient;
+
+  @BeforeEach
+  public void init() {
     WebClient webClient = WebClient
       .builder()
       .baseUrl(wm1.baseUrl())
       .build();
 
-    OpenLibraryApiClient openLibraryApiClient = new OpenLibraryApiClient(webClient);
+    openLibraryApiClient = new OpenLibraryApiClient(webClient);
+  }
+
+  @Test
+  void shouldReturnBookMetadataWhenApiReturnsValidResponse() {
     String isbn = "9780132350884";
+
     wm1.stubFor(
       get("/isbn/" + isbn)
         .willReturn(aResponse()
