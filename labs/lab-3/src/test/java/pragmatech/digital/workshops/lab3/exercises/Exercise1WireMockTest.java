@@ -1,6 +1,18 @@
 package pragmatech.digital.workshops.lab3.exercises;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
+import pragmatech.digital.workshops.lab3.client.OpenLibraryApiClient;
+import pragmatech.digital.workshops.lab3.dto.BookMetadataResponse;
+import wiremock.org.apache.hc.core5.http.HttpHeaders;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Exercise 1: Testing the OpenLibraryApiClient with WireMock
@@ -22,6 +34,12 @@ import org.junit.jupiter.api.Test;
  */
 public class Exercise1WireMockTest {
 
+  @RegisterExtension
+  static WireMockExtension wm1 = WireMockExtension
+    .newInstance()
+    .options(wireMockConfig().dynamicPort())
+    .build();
+
   @Test
   void shouldReturnBookMetadataWhenApiReturnsValidResponse() {
     // TODO:
@@ -30,6 +48,23 @@ public class Exercise1WireMockTest {
     // 3. Create OpenLibraryApiClient with the WebClient
     // 4. Stub a successful response for a specific ISBN
     // 5. Call the client and verify the response
+    WebClient webClient = WebClient
+      .builder()
+      .baseUrl(wm1.baseUrl())
+      .build();
+
+    OpenLibraryApiClient openLibraryApiClient = new OpenLibraryApiClient(webClient);
+    String isbn = "9780132350884";
+    wm1.stubFor(
+      get("/isbn/" + isbn)
+        .willReturn(aResponse()
+          .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+          .withBodyFile(isbn + "-success.json")
+        )
+    );
+
+    BookMetadataResponse bookMetadataResponse = openLibraryApiClient.getBookByIsbn(isbn);
+    assertEquals("Clean Code", bookMetadataResponse.title());
   }
 
   @Test
