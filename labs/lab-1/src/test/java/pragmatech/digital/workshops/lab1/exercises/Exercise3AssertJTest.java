@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 /**
  * AssertJ Workshop Exercise
  * <p>
@@ -37,6 +41,10 @@ class Exercise3AssertJTest {
     LocalDate tomorrow = today.plusDays(1);
     LocalDate nextWeek = today.plusWeeks(1);
 
+    assertThat(today).isBefore(tomorrow);
+    assertThat(yesterday).isBefore(today);
+    assertThat(nextWeek).isAfter(tomorrow);
+    assertThat(nextWeek).isEqualTo(today.plusDays(7));
     // TODO: Write your assertions here
   }
 
@@ -57,8 +65,14 @@ class Exercise3AssertJTest {
     List<String> programmingLanguages = Arrays.asList(
       "Java", "Python", "JavaScript", "Kotlin", "Go");
 
-    // TODO: Write your assertions here
+    assertThat(programmingLanguages)
+      .hasSize(5)
+      .contains("Java", "Kotlin")
+      .containsExactly("Java", "Python", "JavaScript", "Kotlin", "Go")
+      .allMatch(el -> el.length() >= 2);
 
+    assertThat(programmingLanguages)
+      .first().isEqualTo("Java");
   }
 
   /**
@@ -72,7 +86,15 @@ class Exercise3AssertJTest {
    */
   @Test
   void testExceptionAssertions() {
-    // TODO: Write your assertions here
+    assertThatThrownBy(() -> checkNotNull(null))
+      .isInstanceOf(NullPointerException.class);
+
+    assertThatThrownBy(() -> checkPositive(-1))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessageContaining("positive");
+
+    assertThatCode(() -> checkNotNull("123")).doesNotThrowAnyException();
+    assertThatCode(() -> checkPositive(123)).doesNotThrowAnyException();
   }
 
   /**
@@ -96,7 +118,18 @@ class Exercise3AssertJTest {
       25,
       Arrays.asList("java", "spring", "testing"));
 
-    // TODO: Write your assertions here
+    assertThat(user)
+      .returns("john_doe", u -> u.username)
+      .returns(true, u -> u.firstName.startsWith("J"))
+      .returns(true, u -> u.lastName.endsWith("e")); // etc - for oneliner
+
+    // .satisfies can also be used
+
+    assertThat(user.username).isEqualTo("john_doe");
+    assertThat(user.firstName).startsWith("J");
+    assertThat(user.lastName).endsWith("e");
+    assertThat(user.age).isBetween(20, 30);
+    assertThat(user.tags).hasSize(3).contains("java");
   }
 
   // Helper methods for exception testing

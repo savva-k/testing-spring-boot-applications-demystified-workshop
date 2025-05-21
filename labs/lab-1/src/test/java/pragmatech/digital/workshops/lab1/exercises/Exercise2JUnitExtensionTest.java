@@ -1,6 +1,7 @@
 package pragmatech.digital.workshops.lab1.exercises;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class Exercise2JUnitExtensionTest {
 
-  // TODO: Register your extension here if using @RegisterExtension approach
+  @RegisterExtension
+  static TimingExtension timingExtension = new TimingExtension(100);
 
   @Test
-    // TODO: Add extension at method level if using method-level approach
   void fastTest() {
     // This test should run quickly
     int result = 1 + 1;
@@ -38,7 +39,6 @@ class Exercise2JUnitExtensionTest {
   }
 
   @Test
-    // TODO: Add extension at method level if using method-level approach
   void slowTest() throws InterruptedException {
     // This test is artificially slowed down to exceed the threshold
     Thread.sleep(150);

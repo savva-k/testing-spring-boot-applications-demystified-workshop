@@ -1,6 +1,20 @@
 package pragmatech.digital.workshops.lab1.exercises;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import pragmatech.digital.workshops.lab1.domain.Book;
+import pragmatech.digital.workshops.lab1.repository.BookRepository;
+import pragmatech.digital.workshops.lab1.service.BookAlreadyExistsException;
+import pragmatech.digital.workshops.lab1.service.BookService;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Exercise 1: Write unit tests for the BookService class using Mockito
@@ -16,25 +30,32 @@ import org.junit.jupiter.api.Test;
  * - Use assertThrows for testing exceptions
  */
 
+@ExtendWith(MockitoExtension.class)
 class Exercise1UnitTest {
+
+  @Mock
+  private BookRepository bookRepository;
 
   @Test
   void shouldThrowExceptionWhenBookWithIsbnAlreadyExists() {
-    // TODO: Implement this test
-    // 1. Arrange: Create a BookService with the mocked repository
-    //    and configure the mock to return an existing book for a specific ISBN
-    // 2. Act & Assert: Use assertThrows to verify that BookAlreadyExistsException is thrown
-    //    when trying to create a book with that ISBN
+    when(bookRepository.findByIsbn("123")).thenThrow(BookAlreadyExistsException.class);
+    BookService bookService = new BookService(bookRepository);
+    assertThrows(BookAlreadyExistsException.class, () -> bookService.create("123", "Title", "Book"));
+
   }
 
   @Test
   void shouldCreateBookWhenIsbnDoesNotExist() {
-    // TODO: Implement this test
-    // 1. Arrange: Create a BookService with the mocked repository
-    //    and configure the mock to return an empty Optional for the ISBN
-    //    and configure what the save method should return
-    // 2. Act: Call the create method with test data
-    // 3. Assert: Verify the returned ID matches the expected value
-    //    and that the repository methods were called with the correct arguments
+    String actualIsbn = "123";
+    long actualBookId = 999;
+      when(bookRepository.findByIsbn(actualIsbn)).thenReturn(Optional.empty());
+      when(bookRepository.save(any(Book.class))).thenAnswer(a -> {
+        Book book = (Book) a.getArguments()[0];
+        book.setId(actualBookId);
+        return book;
+      });
+      BookService bookService = new BookService(bookRepository);
+      long bookId = bookService.create(actualIsbn, "Title", "Author");
+      assertEquals(actualBookId, bookId);
   }
 }
