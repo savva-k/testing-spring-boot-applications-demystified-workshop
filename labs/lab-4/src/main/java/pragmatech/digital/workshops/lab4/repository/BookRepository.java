@@ -31,15 +31,15 @@ public interface BookRepository extends JpaRepository<Book, Long> {
    * Finds books with similar titles even with typos or slight variations.
    * Requires the pg_trgm extension.
    *
-   * @param title the approximate title to search for
+   * @param title               the approximate title to search for
    * @param similarityThreshold the minimum similarity threshold (0.0-1.0)
    * @return list of books with similar titles, ordered by similarity
    */
   @Query(value = """
-            SELECT * FROM books
-            WHERE similarity(title, :title) > :similarityThreshold
-            ORDER BY similarity(title, :title) DESC
-            """,
+    SELECT * FROM books
+    WHERE similarity(title, :title) > :similarityThreshold
+    ORDER BY similarity(title, :title) DESC
+    """,
     nativeQuery = true)
   List<Book> findBooksByTitleFuzzy(
     @Param("title") String title,

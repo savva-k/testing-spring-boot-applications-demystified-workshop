@@ -13,28 +13,28 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public abstract class PostgresTestcontainer {
 
-    /**
-     * The PostgreSQL container. Using a static field ensures that the container
-     * is started only once for all tests.
-     */
-    @Container
-    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
+  /**
+   * The PostgreSQL container. Using a static field ensures that the container
+   * is started only once for all tests.
+   */
+  @Container
+  private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16-alpine")
+    .withDatabaseName("testdb")
+    .withUsername("test")
+    .withPassword("test");
 
-    static {
-        // Start the container before any tests are run
-        postgresContainer.start();
-    }
+  static {
+    // Start the container before any tests are run
+    postgresContainer.start();
+  }
 
-    /**
-     * Configure Spring to use the TestContainers PostgreSQL instance.
-     */
-    @DynamicPropertySource
-    static void databaseProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgresContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgresContainer::getUsername);
-        registry.add("spring.datasource.password", postgresContainer::getPassword);
-    }
+  /**
+   * Configure Spring to use the TestContainers PostgreSQL instance.
+   */
+  @DynamicPropertySource
+  static void databaseProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgresContainer::getJdbcUrl);
+    registry.add("spring.datasource.username", postgresContainer::getUsername);
+    registry.add("spring.datasource.password", postgresContainer::getPassword);
+  }
 }

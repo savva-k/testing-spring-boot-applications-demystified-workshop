@@ -1,5 +1,9 @@
 package pragmatech.digital.workshops.lab4.experiment;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -18,13 +22,9 @@ import pragmatech.digital.workshops.lab4.client.OpenLibraryApiClient;
 import pragmatech.digital.workshops.lab4.entity.Book;
 import pragmatech.digital.workshops.lab4.entity.BookStatus;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
-
 /**
  * This test demonstrates JUnit 4 style testing.
- *
+ * <p>
  * Key characteristics of JUnit 4:
  * - Uses @RunWith for extension mechanism
  * - @Before and @After for setup/teardown
@@ -41,101 +41,97 @@ import java.time.LocalDate;
 @RunWith(MockitoJUnitRunner.class)
 public class JUnit4StyleTest {
 
-    private Book book;
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
+  @Rule
+  public Timeout globalTimeout = Timeout.seconds(1);
+  private Book book;
+  @Mock
+  private OpenLibraryApiClient apiClient;
 
-    @Mock
-    private OpenLibraryApiClient apiClient;
+  @BeforeClass
+  public static void setUpClass() {
+    System.out.println("Set up once before all tests in the class");
+  }
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+  @AfterClass
+  public static void tearDownClass() {
+    System.out.println("Tear down once after all tests in the class");
+  }
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+  @Before
+  public void setUp() {
+    book = new Book();
+    book.setIsbn("1234567890");
+    book.setTitle("Test Book");
+    book.setAuthor("Test Author");
+    book.setPublishedDate(LocalDate.now());
+    book.setStatus(BookStatus.AVAILABLE);
+  }
 
-    @Rule
-    public Timeout globalTimeout = Timeout.seconds(1);
+  @Test
+  public void testBookProperties() {
+    // JUnit 4 style assertions
+    Assert.assertEquals("Test Book", book.getTitle());
+    Assert.assertEquals("Test Author", book.getAuthor());
+    Assert.assertEquals(BookStatus.AVAILABLE, book.getStatus());
+    Assert.assertTrue(book.isAvailable());
+  }
 
-    @BeforeClass
-    public static void setUpClass() {
-        System.out.println("Set up once before all tests in the class");
-    }
+  @Test
+  public void testBookIsAvailable() {
+    // Test that book is available by default
+    Assert.assertTrue(book.isAvailable());
 
-    @Before
-    public void setUp() {
-        book = new Book();
-        book.setIsbn("1234567890");
-        book.setTitle("Test Book");
-        book.setAuthor("Test Author");
-        book.setPublishedDate(LocalDate.now());
-        book.setStatus(BookStatus.AVAILABLE);
-    }
+    // Change status
+    book.setStatus(BookStatus.BORROWED);
 
-    @Test
-    public void testBookProperties() {
-        // JUnit 4 style assertions
-        Assert.assertEquals("Test Book", book.getTitle());
-        Assert.assertEquals("Test Author", book.getAuthor());
-        Assert.assertEquals(BookStatus.AVAILABLE, book.getStatus());
-        Assert.assertTrue(book.isAvailable());
-    }
+    // Test that book is not available after status change
+    Assert.assertFalse(book.isAvailable());
+  }
 
-    @Test
-    public void testBookIsAvailable() {
-        // Test that book is available by default
-        Assert.assertTrue(book.isAvailable());
+  @Test(expected = NullPointerException.class)
+  public void testExceptionUsingAnnotation() {
+    // This will throw NPE
+    String str = null;
+    str.length();
+  }
 
-        // Change status
-        book.setStatus(BookStatus.BORROWED);
+  @Test
+  public void testExceptionUsingRule() {
+    // Set up expected exception
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("ISBN cannot be null");
 
-        // Test that book is not available after status change
-        Assert.assertFalse(book.isAvailable());
-    }
+    // This should throw the expected exception
+    throw new IllegalArgumentException("ISBN cannot be null");
+  }
 
-    @Test(expected = NullPointerException.class)
-    public void testExceptionUsingAnnotation() {
-        // This will throw NPE
-        String str = null;
-        str.length();
-    }
+  @Test
+  public void testWithTemporaryFolder() throws IOException {
+    // Create temp file using JUnit 4 rule
+    File tempFile = folder.newFile("testFile.txt");
 
-    @Test
-    public void testExceptionUsingRule() {
-        // Set up expected exception
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("ISBN cannot be null");
+    // Assert file was created
+    Assert.assertTrue(tempFile.exists());
+  }
 
-        // This should throw the expected exception
-        throw new IllegalArgumentException("ISBN cannot be null");
-    }
+  @Test(timeout = 100)
+  public void testWithTimeout() throws InterruptedException {
+    // This test will pass because it completes within 100ms
+    Thread.sleep(50);
+  }
 
-    @Test
-    public void testWithTemporaryFolder() throws IOException {
-        // Create temp file using JUnit 4 rule
-        File tempFile = folder.newFile("testFile.txt");
+  @Ignore("Demonstrates how to skip a test in JUnit 4")
+  @Test
+  public void testThatIsIgnored() {
+    Assert.fail("This test should be ignored and not run");
+  }
 
-        // Assert file was created
-        Assert.assertTrue(tempFile.exists());
-    }
-
-    @Test(timeout = 100)
-    public void testWithTimeout() throws InterruptedException {
-        // This test will pass because it completes within 100ms
-        Thread.sleep(50);
-    }
-
-    @Ignore("Demonstrates how to skip a test in JUnit 4")
-    @Test
-    public void testThatIsIgnored() {
-        Assert.fail("This test should be ignored and not run");
-    }
-
-    @After
-    public void tearDown() {
-        book = null;
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        System.out.println("Tear down once after all tests in the class");
-    }
+  @After
+  public void tearDown() {
+    book = null;
+  }
 }

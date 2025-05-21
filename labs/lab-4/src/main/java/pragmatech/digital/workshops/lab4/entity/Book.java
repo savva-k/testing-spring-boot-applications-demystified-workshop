@@ -56,12 +56,12 @@ public class Book {
     this.status = BookStatus.AVAILABLE;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   public Long getId() {
     return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getIsbn() {

@@ -30,7 +30,7 @@ public class WebClientConfig {
       .responseTimeout(Duration.ofSeconds(timeoutSeconds))
       .doOnConnected(conn ->
         conn.addHandlerLast(new ReadTimeoutHandler(timeoutSeconds, TimeUnit.SECONDS))
-            .addHandlerLast(new WriteTimeoutHandler(timeoutSeconds, TimeUnit.SECONDS)));
+          .addHandlerLast(new WriteTimeoutHandler(timeoutSeconds, TimeUnit.SECONDS)));
 
     return WebClient.builder()
       .baseUrl(baseUrl)
