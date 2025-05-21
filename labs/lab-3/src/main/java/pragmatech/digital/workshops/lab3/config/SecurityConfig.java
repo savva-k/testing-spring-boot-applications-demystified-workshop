@@ -27,6 +27,7 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/books/{id}").hasRole("USER")
         .requestMatchers(HttpMethod.DELETE, "/api/books/{id}").hasRole("ADMIN")
+        .requestMatchers("/api/tests/*").hasRole("ADMIN")
         .anyRequest().authenticated()
       )
       .httpBasic(Customizer.withDefaults());

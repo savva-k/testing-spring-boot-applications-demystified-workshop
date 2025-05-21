@@ -1,30 +1,24 @@
 package pragmatech.digital.workshops.lab3.experiment;
 
 import java.time.LocalDate;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.transaction.TestTransaction;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 import pragmatech.digital.workshops.lab3.LocalDevTestcontainerConfig;
 import pragmatech.digital.workshops.lab3.config.WireMockContextInitializer;
 import pragmatech.digital.workshops.lab3.entity.Book;
@@ -54,18 +48,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * test approach, especially when testing transactional behavior or when the test
  * requires access to data created within the test transaction.
  */
-@Disabled
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 @Import(LocalDevTestcontainerConfig.class)
 @ContextConfiguration(initializers = WireMockContextInitializer.class)
-class MockMvcVsWebTestClientTest {
+class MockMvcContextTest {
 
   @Autowired
   private MockMvc mockMvc;
-
-  @Autowired
-  private WebApplicationContext webApplicationContext;
 
   @Autowired
   private BookRepository bookRepository;
@@ -73,11 +63,11 @@ class MockMvcVsWebTestClientTest {
   @PersistenceContext
   private EntityManager entityManager;
 
-  @LocalServerPort
-  private int port;
-
-  @Autowired
-  private WebTestClient webTestClient;
+  @BeforeEach
+  void afterEach() {
+    System.out.println("### Books Left in the Database Before the Test ###");
+    System.out.println(bookRepository.count());
+  }
 
   /**
    * Thread Context Tests demonstrate that:
@@ -91,6 +81,7 @@ class MockMvcVsWebTestClientTest {
   class ThreadContextTests {
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("should remain in same thread when using MockMvc")
     void shouldRemainInSameThreadWhenUsingMockMvc() throws Exception {
       // Arrange
@@ -98,7 +89,7 @@ class MockMvcVsWebTestClientTest {
       AtomicReference<Long> controllerThreadId = new AtomicReference<>();
 
       // Act & Assert
-      mockMvc.perform(get("/api/books/thread-id")
+      mockMvc.perform(get("/api/tests/thread-id")
           .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(result -> {
@@ -107,27 +98,6 @@ class MockMvcVsWebTestClientTest {
 
       // Assert
       assertThat(controllerThreadId.get()).isEqualTo(testThreadId.get());
-    }
-
-    @Test
-    @DisplayName("should use different thread when using WebTestClient")
-    void shouldUseDifferentThreadWhenUsingWebTestClient() {
-      // Arrange
-      AtomicReference<Long> testThreadId = new AtomicReference<>(Thread.currentThread().getId());
-      AtomicReference<Long> controllerThreadId = new AtomicReference<>();
-
-      // Act & Assert
-      webTestClient.get().uri("/api/books/thread-id")
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus().isOk()
-        .expectBody(String.class)
-        .consumeWith(response -> {
-          controllerThreadId.set(Long.valueOf(response.getResponseBody()));
-        });
-
-      // Assert
-      assertThat(controllerThreadId.get()).isNotEqualTo(testThreadId.get());
     }
   }
 
@@ -144,6 +114,7 @@ class MockMvcVsWebTestClientTest {
   class DataAccessTests {
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("should access modified data during request with MockMvc")
     void shouldAccessModifiedDataDuringRequestWithMockMvc() throws Exception {
       // Arrange - Create a book in the test transaction
@@ -157,30 +128,9 @@ class MockMvcVsWebTestClientTest {
       entityManager.flush();
 
       // Act & Assert - MockMvc can see the book because it shares the transaction
-      mockMvc.perform(get("/api/books/data-access/{isbn}", book.getIsbn())
+      mockMvc.perform(get("/api/tests/data-access/{isbn}", book.getIsbn())
           .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("should not access uncommitted data with WebTestClient")
-    @DirtiesContext
-    void shouldNotAccessUncommittedDataWithWebTestClient() {
-      // Arrange - Create a book in the test transaction
-      Book book = new Book();
-      book.setIsbn("0987654321");
-      book.setTitle("Test Book WebClient");
-      book.setAuthor("Test Author");
-      book.setPublishedDate(LocalDate.now());
-      book.setStatus(BookStatus.AVAILABLE);
-      bookRepository.save(book);
-      entityManager.flush();
-
-      // Act & Assert - WebTestClient cannot see the book because it uses a different transaction
-      webTestClient.get().uri("/api/books/data-access/{isbn}", book.getIsbn())
-        .accept(MediaType.APPLICATION_JSON)
-        .exchange()
-        .expectStatus().isNotFound();
     }
   }
 
@@ -198,13 +148,14 @@ class MockMvcVsWebTestClientTest {
   class TransactionRollbackTests {
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("should rollback changes after MockMvc test")
     void shouldRollbackChangesAfterMockMvcTest() throws Exception {
       // Arrange
       String isbn = "1122334455";
 
       // Act - Create a book through the controller with MockMvc
-      mockMvc.perform(get("/api/books/create-for-test/{isbn}/{title}", isbn, "Rollback Test MockMvc")
+      mockMvc.perform(get("/api/tests/create-for-test/{isbn}/{title}", isbn, "Rollback Test MockMvc")
           .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
@@ -212,45 +163,6 @@ class MockMvcVsWebTestClientTest {
       assertThat(bookRepository.findByIsbn(isbn)).isPresent();
       assertThat(TestTransaction.isActive()).isTrue();
       // Note: After this test completes, the transaction will be rolled back
-    }
-
-    @Test
-    @DisplayName("should not rollback changes created by WebTestClient")
-    @DirtiesContext
-    void shouldNotRollbackChangesCreatedByWebTestClient() throws Exception {
-      // Arrange
-      String isbn = "5544332211";
-      assertThat(bookRepository.findByIsbn(isbn)).isEmpty();
-
-      // Act - Create a book through the controller with WebTestClient in a separate thread
-      CountDownLatch latch = new CountDownLatch(1);
-      ExecutorService executor = Executors.newSingleThreadExecutor();
-
-      executor.submit(() -> {
-        try {
-          webTestClient.get().uri("/api/books/create-for-test/{isbn}/{title}", isbn, "Rollback Test WebClient")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isOk();
-          latch.countDown();
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-      });
-
-      latch.await();
-      executor.shutdown();
-
-      // Assert - Book is committed by the WebTestClient thread and remains in the database
-      // We commit and restart the test transaction to see the committed changes
-      TestTransaction.flagForCommit();
-      TestTransaction.end();
-      TestTransaction.start();
-
-      assertThat(bookRepository.findByIsbn(isbn)).isPresent();
-      assertThat(bookRepository.findByIsbn(isbn).get().getTitle()).isEqualTo("Rollback Test WebClient");
-      // Note: This book will remain in the database even after the test completes
     }
   }
 }

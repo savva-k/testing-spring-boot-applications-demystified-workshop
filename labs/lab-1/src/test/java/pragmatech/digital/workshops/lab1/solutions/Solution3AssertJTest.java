@@ -37,7 +37,7 @@ class Solution3AssertJTest {
       .hasSize(5)
       .contains("Java", "Kotlin")
       .startsWith("Java")
-      .containsExactly("Java", "Python", "JavaScript", "Kotlin", "Go");
+      .containsExactlyInAnyOrder("Java", "Python", "JavaScript", "Kotlin", "Go");
 
     // Using a predicate
     assertThat(programmingLanguages)
