@@ -5,7 +5,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import pragmatech.digital.workshops.lab2.entity.Book;
 import pragmatech.digital.workshops.lab2.repository.BookRepository;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Exercise 2: Data JPA Test
@@ -22,7 +31,15 @@ import pragmatech.digital.workshops.lab2.repository.BookRepository;
 class Exercise2DataJpaTest {
 
   @Autowired
-  private BookRepository cut;
+  private BookRepository bookRepository;
+
+  @Container
+  @ServiceConnection
+  static PostgreSQLContainer<?> pg = new PostgreSQLContainer<>("postgres:16-alpine")
+    .withDatabaseName("testdb")
+    .withUsername("test")
+    .withPassword("test")
+    .withInitScript("init-postgres.sql");
 
   @Nested
   @DisplayName("Full text search tests")
@@ -31,15 +48,24 @@ class Exercise2DataJpaTest {
     @Test
     @DisplayName("Should find books by title with proper ranking")
     void shouldFindBooksByTitleWithProperRanking() {
-      // Write a test that adds multiple books with different titles
-      // Call the searchBooksByTitleWithRanking method with a search term
-      // Verify that books containing the search term are returned and properly ranked
+      Book book1 = new Book("123", "Test1", "Test1", LocalDate.now());
+      Book book2 = new Book("321", "Test2", "Test2", LocalDate.now());
+      String searchTerm = "Test1";
+
+      bookRepository.save(book1);
+      bookRepository.save(book2);
+
+      List<Book> books = bookRepository.searchBooksByTitleWithRanking(searchTerm);
+
+      assertEquals(1, books.size());
+      assertEquals(searchTerm, book1.getTitle());
     }
 
     @Test
     @DisplayName("Should return empty list when no books match search term")
     void shouldReturnEmptyListWhenNoBooksMatchSearchTerm() {
-      // Write a test that verifies the repository returns an empty list when no books match the search term
+      List<Book> books = bookRepository.findAll();
+      assertEquals(0, books.size());
     }
   }
 }

@@ -5,11 +5,22 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pragmatech.digital.workshops.lab2.config.SecurityConfig;
 import pragmatech.digital.workshops.lab2.controller.BookController;
 import pragmatech.digital.workshops.lab2.service.BookService;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Exercise 1: WebMvc Test
@@ -22,6 +33,7 @@ import pragmatech.digital.workshops.lab2.service.BookService;
  * 3. Test that books can be created successfully with proper JSON data
  */
 @WebMvcTest(BookController.class)
+@Import(SecurityConfig.class)
 class Exercise1WebMvcTest {
 
   @Autowired
@@ -37,30 +49,40 @@ class Exercise1WebMvcTest {
     @Test
     @DisplayName("Should return 401 Unauthorized when no authentication is provided")
     void shouldReturnUnauthorizedWhenNoAuthenticationIsProvided() throws Exception {
-      // Write a test that verifies DELETE requests without authentication return 401 Unauthorized
+      mockMvc
+        .perform(MockMvcRequestBuilders.delete("/api/books/123"))
+        .andExpect(status().isUnauthorized());
+
+      verify(bookService, times(0)).deleteBook(anyLong());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("Should return 403 Forbidden when authenticated with insufficient privileges")
     void shouldReturnForbiddenWhenAuthenticatedWithInsufficientPrivileges() throws Exception {
-      // Write a test that verifies DELETE requests with USER role return 403 Forbidden
+      mockMvc
+        .perform(MockMvcRequestBuilders.delete("/api/books/123"))
+        .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Should return 204 No Content when authenticated as admin and book exists")
     void shouldReturnNoContentWhenAuthenticatedAsAdminAndBookExists() throws Exception {
-      // Write a test that verifies DELETE requests with ADMIN role are successful
-      // Mock the service to return true indicating the book was deleted
+      when(bookService.deleteBook(anyLong())).thenReturn(true);
+      mockMvc
+        .perform(MockMvcRequestBuilders.delete("/api/books/123"))
+        .andExpect(status().isNoContent());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Should return 404 Not Found when authenticated as admin but book doesn't exist")
     void shouldReturnNotFoundWhenAuthenticatedAsAdminButBookDoesntExist() throws Exception {
-      // Write a test that verifies DELETE requests with ADMIN role return 404 when the book doesn't exist
-      // Mock the service to return false indicating the book was not found
+      when(bookService.deleteBook(anyLong())).thenReturn(false);
+      mockMvc
+        .perform(MockMvcRequestBuilders.delete("/api/books/123"))
+        .andExpect(status().isNotFound());
     }
   }
 
@@ -72,17 +94,40 @@ class Exercise1WebMvcTest {
     @WithMockUser
     @DisplayName("Should return 201 Created when valid book data is provided")
     void shouldReturnCreatedWhenValidBookDataIsProvided() throws Exception {
-      // Write a test that verifies POST requests with valid book data return 201 Created
-      // Mock the service to return a book ID
-      // Check that the Location header is present in the response
+      String validBookJson = """
+        {
+            "isbn": "123-1234567890",
+            "title": "Test Book",
+            "author": "Test Author",
+            "publishedDate": "2023-01-01"
+        }
+        """;
+
+      when(bookService.createBook(any())).thenReturn(43L);
+      mockMvc
+        .perform(
+          MockMvcRequestBuilders
+            .post("/api/books")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(validBookJson)
+        )
+        .andExpect(status().isCreated());
     }
 
     @Test
     @WithMockUser
     @DisplayName("Should return 400 Bad Request when invalid book data is provided")
     void shouldReturnBadRequestWhenInvalidBookDataIsProvided() throws Exception {
-      // Write a test that verifies POST requests with invalid book data return 400 Bad Request
-      // Don't mock any service method since the validation should fail before the service is called
+      String validBookJson = """
+        {
+            "isbn": "AAAAA",
+            "title": "Test Book",
+            "author": "Test Author",
+            "publishedDate": "1010101010"
+        }
+        """;
+      mockMvc.perform(MockMvcRequestBuilders.post("/api/books"))
+        .andExpect(status().isBadRequest());
     }
   }
 }
