@@ -10,10 +10,10 @@ Proudly presented by [PragmaTech GmbH](https://pragmatech.digital/).
 
 This workshop is designed to demystify testing in Spring Boot applications through hands-on exercises, covering everything from basic unit testing to advanced integration testing techniques. The workshop is divided into four lab sessions, each focusing on different aspects of testing Spring Boot applications.
 
-- Lab 1: Introduction & Unit Testing
-- Lab 2: Sliced Testing
-- Lab 3: Integration Testing
-- Lab 4: Pitfalls, Best Practices, and AI 
+- [Lab 1](labs/lab-1): Introduction & Unit Testing
+- [Lab 2](labs/lab-2): Sliced Testing
+- [Lab 3](labs/lab-3): Integration Testing
+- [Lab 4](labs/lab-4): Pitfalls, Best Practices, and AI 
 
 ## Workshop Format
 
